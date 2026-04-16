@@ -1,58 +1,66 @@
 import kb from "@/data/kindle.json";
 
+function normalize(text) {
+  return String(text || "").toLowerCase().trim();
+}
+
 function buildChunks(kb) {
   const chunks = [];
 
-  // FAQ
-  kb.faq?.forEach(item => {
+  kb.faq?.forEach((item) => {
     chunks.push({
       type: "faq",
-      text: (item.q + " " + item.a).toLowerCase(),
-      data: item
+      text: `${item.q} ${item.a}`.toLowerCase(),
+      data: item,
     });
   });
 
-  // 模型
-  kb.models?.forEach(m => {
+  kb.models?.forEach((m) => {
     chunks.push({
       type: "model",
-      text: JSON.stringify(m).toLowerCase(),
-      data: m
+      text: [
+        m.name,
+        m.series,
+        m.generation,
+        ...(m.colors || []),
+        ...(m.highlights || []),
+        m.best_for || "",
+      ]
+        .join(" ")
+        .toLowerCase(),
+      data: m,
     });
   });
 
-  // 购买指南（重点修复）
-  kb.buying_guide?.scenarios?.forEach(item => {
+  kb.buying_guide?.scenarios?.forEach((item) => {
     chunks.push({
       type: "guide",
-      text: (item.need + " " + item.recommendation + " " + item.reason).toLowerCase(),
-      data: item
+      text: `${item.need} ${item.recommendation} ${item.reason}`.toLowerCase(),
+      data: item,
     });
   });
 
-  // 教程（重点修复）
   const tutorialGroups = kb.tutorials || {};
-
-  Object.values(tutorialGroups).forEach(group => {
-    group.forEach(item => {
-      chunks.push({
-        type: "tutorial",
-        text: JSON.stringify(item).toLowerCase(),
-        data: item
+  Object.values(tutorialGroups).forEach((group) => {
+    if (Array.isArray(group)) {
+      group.forEach((item) => {
+        chunks.push({
+          type: "tutorial",
+          text: JSON.stringify(item).toLowerCase(),
+          data: item,
+        });
       });
-    });
+    }
   });
 
-  // 格式（重点修复）
   const formatGroups = kb.formats || {};
-
-  Object.values(formatGroups).forEach(group => {
+  Object.values(formatGroups).forEach((group) => {
     if (Array.isArray(group)) {
-      group.forEach(item => {
+      group.forEach((item) => {
         chunks.push({
           type: "format",
           text: JSON.stringify(item).toLowerCase(),
-          data: item
+          data: item,
         });
       });
     }
@@ -62,6 +70,93 @@ function buildChunks(kb) {
 }
 
 const chunks = buildChunks(kb);
+
+const synonymMap = {
+  护眼: "暖光",
+  伤眼: "暖光",
+  便宜: "性价比",
+  划算: "性价比",
+  高端: "旗舰",
+  学生: "学生",
+  学生党: "学生",
+  看漫画: "漫画",
+  看pdf: "pdf",
+  传书: "发送",
+  抹茶绿: "抹茶绿",
+  玉绿: "玉绿",
+  树莓红: "树莓红",
+};
+
+function applySynonyms(text) {
+  let result = normalize(text);
+  for (const [key, value] of Object.entries(synonymMap)) {
+    result = result.replaceAll(normalize(key), normalize(value));
+  }
+  return result;
+}
+
+function scoreChunk(query, chunk) {
+  const keywords = query.split(/\s+/).filter(Boolean);
+  let score = 0;
+
+  for (const kw of keywords) {
+    if (chunk.text.includes(kw)) score += 1;
+  }
+
+  return score;
+}
+
+function localSearch(query) {
+  const q = applySynonyms(query);
+
+  return chunks
+    .map((chunk) => ({
+      ...chunk,
+      score: scoreChunk(q, chunk),
+    }))
+    .filter((chunk) => chunk.score > 0)
+    .sort((a, b) => b.score - a.score);
+}
+
+function generateAnswer(hit) {
+  if (hit.type === "faq") {
+    return hit.data.a;
+  }
+
+  if (hit.type === "model") {
+    const m = hit.data;
+    return `${m.name}${m.generation ? `（${m.generation}）` : ""}
+主要特点：${Array.isArray(m.highlights) ? m.highlights.join("、") : "暂无"}
+配色：${Array.isArray(m.colors) ? m.colors.join("、") : "暂无"}
+适合人群：${m.best_for || "暂无"}`;
+  }
+
+  if (hit.type === "guide") {
+    return `推荐：${hit.data.recommendation}\n原因：${hit.data.reason}`;
+  }
+
+  if (hit.type === "tutorial") {
+    if (hit.data.steps) {
+      return `${hit.data.title}\n${hit.data.steps
+        .map((s, i) => `${i + 1}. ${s}`)
+        .join("\n")}`;
+    }
+    if (hit.data.content) {
+      return `${hit.data.title}\n${hit.data.content}`;
+    }
+    if (hit.data.methods) {
+      return `${hit.data.title}\n${hit.data.methods
+        .map((m) => `${m.name}：${(m.steps || []).join("；")}`)
+        .join("\n")}`;
+    }
+  }
+
+  if (hit.type === "format") {
+    return `${hit.data.format}：${hit.data.notes || ""}`;
+  }
+
+  return null;
+}
 
 const INTENTS = {
   MODEL_INFO: "model_info",
@@ -89,6 +184,8 @@ const modelKeywords = [
 const colorKeywords = [
   "抹茶绿",
   "黑色",
+  "金色",
+  "灰色",
   "绿色",
   "配色",
   "颜色",
@@ -106,7 +203,6 @@ const recommendKeywords = [
   "性价比",
   "学生",
   "漫画",
-  "pdf",
   "阅读",
 ];
 
@@ -142,14 +238,7 @@ const formatKeywords = [
   "支持什么格式",
 ];
 
-const compareKeywords = [
-  "对比",
-  "区别",
-  "哪个好",
-  "哪一个好",
-  "vs",
-  "和",
-];
+const compareKeywords = ["对比", "区别", "哪个好", "哪一个好", "vs", "和"];
 
 const faqKeywords = [
   "支持中文",
@@ -165,64 +254,36 @@ const faqKeywords = [
 ];
 
 function includesAny(text, keywords) {
-  return keywords.some((kw) => text.includes(kw));
+  return keywords.some((kw) => text.includes(normalize(kw)));
 }
 
 function detectIntent(rawText) {
-  const text = normalize(rawText);
+  const text = applySynonyms(rawText);
 
-  if (includesAny(text, colorKeywords)) {
-    return INTENTS.COLOR_INFO;
-  }
-
-  if (includesAny(text, compareKeywords)) {
-    return INTENTS.COMPARE;
-  }
-
-  if (includesAny(text, recommendKeywords)) {
-    return INTENTS.RECOMMEND;
-  }
-
-  if (includesAny(text, tutorialKeywords)) {
-    return INTENTS.TUTORIAL;
-  }
-
-  if (includesAny(text, formatKeywords)) {
-    return INTENTS.FORMAT;
-  }
-
-  if (includesAny(text, faqKeywords)) {
-    return INTENTS.FAQ;
-  }
-
-  if (includesAny(text, modelKeywords)) {
-    return INTENTS.MODEL_INFO;
-  }
+  if (includesAny(text, colorKeywords)) return INTENTS.COLOR_INFO;
+  if (includesAny(text, compareKeywords)) return INTENTS.COMPARE;
+  if (includesAny(text, recommendKeywords)) return INTENTS.RECOMMEND;
+  if (includesAny(text, tutorialKeywords)) return INTENTS.TUTORIAL;
+  if (includesAny(text, formatKeywords)) return INTENTS.FORMAT;
+  if (includesAny(text, faqKeywords)) return INTENTS.FAQ;
+  if (includesAny(text, modelKeywords)) return INTENTS.MODEL_INFO;
 
   return INTENTS.GENERAL;
 }
 
 function handleColorQuery(userMessage, kb) {
-  const text = normalize(userMessage);
+  const text = applySynonyms(userMessage);
 
   for (const model of kb.models || []) {
     const colors = model.colors || [];
-    const matchedColor = colors.find((c) => text.includes(normalize(c)));
-    if (matchedColor) {
-      return `${model.name} 提供这些配色：${colors.join("、")}。`;
-    }
-
-    // 兼容“抹茶绿”这种局部词
-    if (colors.some((c) => normalize(c).includes(text) || text.includes(normalize(c)))) {
-      return `${model.name} 提供这些配色：${colors.join("、")}。`;
-    }
-  }
-
-  // 专门处理抹茶绿这种用户只输入一个颜色名
-  for (const model of kb.models || []) {
-    const colors = model.colors || [];
-    if (colors.some((c) => normalize(c).includes("抹茶绿")) && text.includes("抹茶绿")) {
-      return `${model.name} 提供这些配色：${colors.join("、")}。`;
+    for (const color of colors) {
+      const c = normalize(color);
+      if (text.includes(c) || c.includes(text)) {
+        return `${model.name} 提供这些配色：${colors.join("、")}。`;
+      }
+      if (text.includes("抹茶绿") && c.includes("抹茶绿")) {
+        return `${model.name} 提供这些配色：${colors.join("、")}。`;
+      }
     }
   }
 
@@ -230,7 +291,7 @@ function handleColorQuery(userMessage, kb) {
 }
 
 function handleRecommendQuery(userMessage, kb) {
-  const text = normalize(userMessage);
+  const text = applySynonyms(userMessage);
   const scenarios = kb.buying_guide?.scenarios || [];
 
   let best = null;
@@ -243,27 +304,17 @@ function handleRecommendQuery(userMessage, kb) {
 
     let score = 0;
 
-    if (text.includes("预算") || text.includes("便宜") || text.includes("性价比")) {
-      if (corpus.includes("价格最低") || corpus.includes("最便宜") || corpus.includes("性价比")) {
-        score += 2;
-      }
+    if (
+      (text.includes("预算") || text.includes("便宜") || text.includes("性价比")) &&
+      (corpus.includes("价格最低") || corpus.includes("最便宜") || corpus.includes("性价比"))
+    ) {
+      score += 2;
     }
 
-    if (text.includes("防水")) {
-      if (corpus.includes("防水")) score += 2;
-    }
-
-    if (text.includes("漫画") || text.includes("彩色")) {
-      if (corpus.includes("彩色") || corpus.includes("漫画")) score += 2;
-    }
-
-    if (text.includes("笔记") || text.includes("手写")) {
-      if (corpus.includes("笔记") || corpus.includes("手写")) score += 2;
-    }
-
-    if (text.includes("学生")) {
-      if (corpus.includes("学生")) score += 2;
-    }
+    if (text.includes("防水") && corpus.includes("防水")) score += 2;
+    if ((text.includes("漫画") || text.includes("彩色")) && (corpus.includes("彩色") || corpus.includes("漫画"))) score += 2;
+    if ((text.includes("笔记") || text.includes("手写")) && (corpus.includes("笔记") || corpus.includes("手写"))) score += 2;
+    if (text.includes("学生") && corpus.includes("学生")) score += 2;
 
     if (score > bestScore) {
       best = item;
@@ -289,7 +340,7 @@ function flattenTutorials(tutorials) {
 }
 
 function handleTutorialQuery(userMessage, kb) {
-  const text = normalize(userMessage);
+  const text = applySynonyms(userMessage);
   const tutorials = flattenTutorials(kb.tutorials);
 
   let best = null;
@@ -318,7 +369,7 @@ function handleTutorialQuery(userMessage, kb) {
 
   if (best.methods) {
     return `${best.title}\n${best.methods
-      .map((m) => `${m.name}：${m.steps.join("；")}`)
+      .map((m) => `${m.name}：${(m.steps || []).join("；")}`)
       .join("\n")}`;
   }
 
@@ -330,7 +381,7 @@ function handleTutorialQuery(userMessage, kb) {
 }
 
 function handleFormatQuery(userMessage, kb) {
-  const text = normalize(userMessage);
+  const text = applySynonyms(userMessage);
   const formats = kb.formats || {};
 
   const all = [
@@ -356,12 +407,16 @@ function handleFormatQuery(userMessage, kb) {
 }
 
 function handleCompareQuery(userMessage, kb) {
-  const text = normalize(userMessage);
+  const text = applySynonyms(userMessage);
   const models = kb.models || [];
 
   const matched = models.filter((m) => {
     const corpus = normalize(`${m.name} ${m.series} ${m.generation}`);
-    return text.includes(normalize(m.name)) || text.includes(normalize(m.series)) || corpus.includes(text);
+    return (
+      text.includes(normalize(m.name)) ||
+      text.includes(normalize(m.series)) ||
+      corpus.includes(text)
+    );
   });
 
   if (matched.length >= 2) {
@@ -373,107 +428,13 @@ function handleCompareQuery(userMessage, kb) {
 4. 适合人群：${a.best_for || "暂无"} vs ${b.best_for || "暂无"}`;
   }
 
-  // 支持 “Kindle 和 iPad 哪个好” 这种 FAQ
-  const faqHit = (kb.faq || []).find((x) => text.includes(normalize(x.q)) || normalize(x.q).includes(text));
+  const faqHit = (kb.faq || []).find(
+    (x) => text.includes(normalize(x.q)) || normalize(x.q).includes(text)
+  );
   if (faqHit) return faqHit.a;
 
   return null;
 }
-
-
-const synonymMap = {
-  护眼: "暖光",
-  伤眼: "暖光",
-  便宜: "性价比",
-  划算: "性价比",
-  高端: "旗舰",
-  学生: "入门",
-  学生党: "入门",
-  看漫画: "漫画",
-  看pdf: "pdf",
-  传书: "导入电子书",
-};
-
-function normalize(text) {
-  let result = (text || "").toLowerCase();
-  for (const [key, value] of Object.entries(synonymMap)) {
-    result = result.replaceAll(key.toLowerCase(), value.toLowerCase());
-  }
-  return result;
-}
-
-function scoreChunk(query, chunk) {
-  const keywords = query.split(/\s+/).filter(Boolean);
-  let score = 0;
-
-  for (const kw of keywords) {
-    if (chunk.text.includes(kw)) {
-      score += 1;
-    }
-  }
-
-  return score;
-}
-
-function localSearch(query) {
-  const normalizedQuery = normalize(query);
-
-  return chunks
-    .map((chunk) => ({
-      ...chunk,
-      score: scoreChunk(normalizedQuery, chunk),
-    }))
-    .filter((chunk) => chunk.score > 0)
-    .sort((a, b) => b.score - a.score);
-}
-
-function generateAnswer(hit) {
-  if (hit.type === "faq") {
-    return hit.data.a;
-  }
-
-  if (hit.type === "model") {
-    const m = hit.data;
-    return `${m.name}${m.year ? `（${m.year}）` : ""}\n主要特点：${
-      Array.isArray(m.features) ? m.features.join("、") : "暂无"
-    }\n价格：${m.price || "暂无"}\n推荐理由：${
-      m.desc || m.recommendation || "暂无"
-    }`;
-  }
-
-  if (hit.type === "guide") {
-    return typeof hit.data === "string"
-      ? hit.data
-      : JSON.stringify(hit.data, null, 2);
-  }
-
-  if (hit.type === "tutorial") {
-    return typeof hit.data === "string"
-      ? hit.data
-      : JSON.stringify(hit.data, null, 2);
-  }
-
-  if (hit.type === "format") {
-    return typeof hit.data === "string"
-      ? hit.data
-      : JSON.stringify(hit.data, null, 2);
-  }
-
-  return "已找到相关信息，但暂时无法整理为标准回答。";
-}
-
-export async function POST(req) {
-  try {
-    const body = await req.json();
-    const messages = Array.isArray(body.messages) ? body.messages : [];
-    const userMessage = messages[messages.length - 1]?.content || "";
-
-    if (!userMessage) {
-      return new Response(
-        JSON.stringify({ error: "缺少用户消息内容" }),
-        { status: 400 }
-      );
-    }
 
 export async function POST(req) {
   try {
@@ -518,7 +479,6 @@ export async function POST(req) {
       );
     }
 
-    // 本地没命中，再走 DeepSeek
     const upstream = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {

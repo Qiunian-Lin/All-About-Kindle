@@ -269,6 +269,21 @@ function ChatSection() {
   const [history, setHistory] = useState([]);
   const boxRef = useRef(null);
 
+function getVisitorId() {
+  if (typeof window === "undefined") return "";
+
+  let visitorId = localStorage.getItem("all_of_kindle_visitor_id");
+
+  if (!visitorId) {
+    visitorId =
+      crypto.randomUUID?.() ||
+      `visitor_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem("all_of_kindle_visitor_id", visitorId);
+  }
+
+  return visitorId;
+}
+  
   useEffect(()=>{
     if(boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
   },[msgs, loading]);
@@ -282,10 +297,17 @@ function ChatSection() {
     setHistory(nh);
     setLoading(true);
     try {
-      const res = await fetch("/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ messages: nh }),  // 只传 messages，system 已在后端写死
+      const visitorId = getVisitorId();
+
+   const res = await fetch("/api/chat", {
+     method: "POST",
+     headers: {
+       "Content-Type": "application/json",
+     },
+     body: JSON.stringify({
+       visitorId,
+       messages: nh,
+  }),
 });
       const data = await res.json();
       const reply = data.reply || "未收到有效回复";

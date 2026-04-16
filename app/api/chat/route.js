@@ -451,22 +451,25 @@ export async function POST(req) {
     const intent = detectIntent(userMessage);
     let localReply = null;
 
-    if (intent === INTENTS.COLOR_INFO) {
-      localReply = handleColorQuery(userMessage, kb);
-    } else if (intent === INTENTS.RECOMMEND) {
-      localReply = handleRecommendQuery(userMessage, kb);
-    } else if (intent === INTENTS.TUTORIAL) {
-      localReply = handleTutorialQuery(userMessage, kb);
-    } else if (intent === INTENTS.FORMAT) {
-      localReply = handleFormatQuery(userMessage, kb);
-    } else if (intent === INTENTS.COMPARE) {
-      localReply = handleCompareQuery(userMessage, kb);
-    } else {
-      const hits = localSearch(userMessage);
-      if (hits.length > 0 && hits[0].score >= 2) {
-        localReply = generateAnswer(hits[0]);
-      }
-    }
+   if (intent === INTENTS.COLOR_INFO) {
+  localReply = handleColorQuery(userMessage, kb);
+} else if (intent === INTENTS.RECOMMEND) {
+  localReply = handleRecommendQuery(userMessage, kb);
+} else if (intent === INTENTS.TUTORIAL) {
+  localReply = handleTutorialQuery(userMessage, kb);
+} else if (intent === INTENTS.FORMAT) {
+  localReply = handleFormatQuery(userMessage, kb);
+} else if (intent === INTENTS.COMPARE) {
+  localReply = handleCompareQuery(userMessage, kb);
+} else if (intent === INTENTS.MODEL_INFO) {
+  localReply = handleModelQuery(userMessage, kb);
+} else {
+  const hits = localSearch(userMessage);
+  if (hits.length > 0 && hits[0].score >= 1) {
+    localReply = generateAnswer(hits[0]);
+  }
+}
+    
 
     if (localReply) {
       return new Response(
@@ -523,4 +526,65 @@ export async function POST(req) {
       { status: 500 }
     );
   }
+}
+
+function handleModelQuery(userMessage, kb) {
+  const text = applySynonyms(userMessage);
+  const models = kb.models || [];
+
+  let best = null;
+  let bestScore = 0;
+
+  for (const model of models) {
+    let score = 0;
+
+    const name = normalize(model.name);
+    const series = normalize(model.series);
+    const generation = normalize(model.generation);
+    const released = normalize(model.released);
+    const corpus = `${name} ${series} ${generation} ${released}`;
+
+    if (text.includes(name)) score += 4;
+    if (text.includes(series)) score += 3;
+    if (text.includes(generation)) score += 2;
+
+    // 兼容 Paperwhite / Scribe / Colorsoft 等英文名
+    const keywords = [
+      model.name,
+      model.series,
+      model.generation,
+      ...(model.colors || []),
+      ...(model.highlights || []),
+    ]
+      .map(normalize)
+      .filter(Boolean);
+
+    for (const kw of keywords) {
+      if (kw && text.includes(kw)) {
+        score += 1;
+      }
+    }
+
+    // 兼容用户只写 2024 + paperwhite
+    if (text.includes("2024") && corpus.includes("2024")) score += 1;
+    if (text.includes("2025") && corpus.includes("2025")) score += 1;
+    if (text.includes("paperwhite") && corpus.includes("paperwhite")) score += 2;
+    if (text.includes("colorsoft") && corpus.includes("colorsoft")) score += 2;
+    if (text.includes("scribe") && corpus.includes("scribe")) score += 2;
+    if (text.includes("kindle") && corpus.includes("kindle")) score += 1;
+
+    if (score > bestScore) {
+      best = model;
+      bestScore = score;
+    }
+  }
+
+  if (!best || bestScore < 2) return null;
+
+  return `${best.name}${best.generation ? `（${best.generation}）` : ""}
+主要特点：${Array.isArray(best.highlights) ? best.highlights.join("、") : "暂无"}
+屏幕：${best.display?.size_inch || "暂无"}英寸
+存储：${Array.isArray(best.storage_gb) ? best.storage_gb.join(" / ") + "GB" : "暂无"}
+防水：${best.waterproof_ipx || "不支持"}
+适合人群：${best.best_for || "暂无"}`;
 }

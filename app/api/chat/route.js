@@ -442,6 +442,12 @@ export async function POST(req) {
     const messages = Array.isArray(body.messages) ? body.messages : [];
     const userMessage = messages[messages.length - 1]?.content || "";
 
+    const visitorId = body.visitorId || "";
+    const currentProfile = getUserProfile(visitorId);
+    const preferencePatch = extractPreferencesFromMessage(userMessage);
+    const updatedProfile = mergeProfile(currentProfile, preferencePatch);
+    saveUserProfile(visitorId, updatedProfile);
+
     if (!userMessage) {
       return new Response(JSON.stringify({ error: "缺少用户消息内容" }), {
         status: 400,
@@ -452,9 +458,18 @@ export async function POST(req) {
     let localReply = null;
 
    if (intent === INTENTS.COLOR_INFO) {
-  localReply = handleColorQuery(userMessage, kb);
-} else if (intent === INTENTS.RECOMMEND) {
-  localReply = handleRecommendQuery(userMessage, kb);
+    localReply = handleColorQuery(userMessage, kb);
+    } else if (intent === INTENTS.RECOMMEND) {
+    localReply = handleRecommendQuery(userMessage, kb);
+
+   if (!localReply) {
+    const personalized = buildPersonalizedRecommendation(updatedProfile, kb);
+     if (personalized?.reply) {
+      localReply = personalized.reply;
+      updatedProfile.last_recommendation = personalized.recommendedModel || "";
+      saveUserProfile(visitorId, updatedProfile);
+    }
+  }
 } else if (intent === INTENTS.TUTORIAL) {
   localReply = handleTutorialQuery(userMessage, kb);
 } else if (intent === INTENTS.FORMAT) {
@@ -493,8 +508,12 @@ export async function POST(req) {
         messages: [
           {
             role: "system",
-            content:
-              "你是 All of Kindle 网站的专业 Kindle 助手。优先回答 Kindle 选购、使用、型号区别、格式支持、阅读建议等问题。回答简洁清晰，避免空话。",
+            content: "你是 All of Kindle 网站的专业 Kindle 助手。
+              优先回答 Kindle 选购、使用、型号区别、格式支持、阅读建议等问题。
+              回答简洁清晰，避免空话。
+              当前用户历史偏好：
+              ${JSON.stringify(updatedProfile, null, 2)}
+              当用户询问推荐类问题时，请结合这些历史偏好给出更个性化的建议。",
           },
           ...messages,
         ],

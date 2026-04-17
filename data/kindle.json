@@ -1,0 +1,640 @@
+{
+  "_meta": {
+    "name": "AllofKindle 知识库",
+    "version": "1.0.0",
+    "updated": "2026-04-16",
+    "description": "覆盖 Kindle 全系型号规格、使用教程、常见问题、购买建议的本地知识库，供 AI 路由优先查询。"
+  },
+
+  "brand_overview": {
+    "brand": "Amazon Kindle",
+    "founded": "2007-11-19",
+    "developer": "Amazon Lab126",
+    "description": "Kindle 是亚马逊设计和销售的系列电子阅读器，使用 E Ink 电子墨水屏，支持购买、下载、阅读电子书、报纸、杂志及有声书。截至 2025 年已发布 13 代设备。",
+    "key_milestones": [
+      { "year": 2007, "event": "第一代 Kindle 发布，售价 $399，5.5小时内售罄" },
+      { "year": 2012, "event": "Kindle Paperwhite 首代发布，带前置背光" },
+      { "year": 2016, "event": "Kindle Oasis 发布，首款带实体翻页键的高端型号" },
+      { "year": 2021, "event": "Kindle Paperwhite 第5代，升级至 6.8 寸屏幕，支持暖光" },
+      { "year": 2022, "event": "Kindle Scribe 发布，首款支持手写笔的 Kindle" },
+      { "year": 2024, "event": "全线产品更新；Kindle Colorsoft Signature Edition 发布，首款彩色 E Ink Kindle" },
+      { "year": 2025, "event": "Kindle Colorsoft（标准版）发布；Kindle Scribe Colorsoft 发布（首款彩色 Scribe）；Kindle Scribe 3（带/不带前灯版本）发布" }
+    ]
+  },
+
+  "models": [
+    {
+      "id": "kindle_2024",
+      "name": "Kindle（2024）",
+      "series": "Kindle 基础版",
+      "generation": "第11代（2024年更新）",
+      "released": "2024-10",
+      "status": "在售",
+      "price_usd": { "with_ads": 109.99, "without_ads": 124.99 },
+      "price_cny_approx": "约 799 元",
+      "display": {
+        "size_inch": 6,
+        "resolution_ppi": 300,
+        "technology": "E Ink",
+        "glare_free": true,
+        "front_light": true,
+        "adjustable_color_temp": false,
+        "recessed": true,
+        "notes": "比上一代亮度提升 25%，对比度更高，翻页速度更快"
+      },
+      "storage_gb": [16],
+      "connectivity": ["Wi-Fi", "USB-C"],
+      "battery": { "claimed_weeks": 6 },
+      "waterproof_ipx": null,
+      "weight_g": null,
+      "colors": ["黑色 (Black)", "抹茶绿 (Matcha)"],
+      "highlights": [
+        "亚马逊最轻薄紧凑的 Kindle",
+        "25% 更亮的前灯（与 Paperwhite 持平）",
+        "支持深色模式",
+        "75% 回收塑料、90% 回收镁合金，100% 可回收包装"
+      ],
+      "not_included": ["无线充电", "自动调光", "彩色显示", "翻页物理按键"],
+      "best_for": "预算有限、轻量阅读需求用户"
+    },
+    {
+      "id": "kindle_paperwhite_2024",
+      "name": "Kindle Paperwhite（2024）",
+      "series": "Paperwhite",
+      "generation": "第7代 Paperwhite",
+      "released": "2024-10",
+      "status": "在售",
+      "price_usd": { "with_ads": 159.99, "without_ads": 174.99 },
+      "price_cny_approx": "约 1149 元",
+      "display": {
+        "size_inch": 7,
+        "resolution_ppi": 300,
+        "technology": "E Ink",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "adjustable_color_temp": true,
+        "notes": "相比上代 6.8 寸升级至 7 寸，更快的刷新速度与更高对比度"
+      },
+      "storage_gb": [16, 32],
+      "connectivity": ["Wi-Fi", "USB-C"],
+      "battery": { "claimed_weeks": 12 },
+      "waterproof_ipx": "IPX8（2米水下30分钟）",
+      "weight_g": 211,
+      "colors": ["黑色 (Black)", "树莓红 (Raspberry)", "玉绿 (Jade)"],
+      "highlights": [
+        "7寸大屏，比基础款更舒适",
+        "IPX8 防水",
+        "17 个 LED 前灯，支持暖光调节",
+        "续航约 12 周"
+      ],
+      "not_included": ["自动调光", "无线充电（需升级至 SE 版本）"],
+      "best_for": "日常重度阅读用户、有防水需求用户"
+    },
+    {
+      "id": "kindle_paperwhite_se_2024",
+      "name": "Kindle Paperwhite Signature Edition（2024）",
+      "series": "Paperwhite",
+      "generation": "第7代 Paperwhite SE",
+      "released": "2024-10",
+      "status": "在售",
+      "price_usd": { "without_ads": 199.99 },
+      "price_cny_approx": "约 1449 元",
+      "display": {
+        "size_inch": 7,
+        "resolution_ppi": 300,
+        "technology": "E Ink",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "auto_adjusting_light": true,
+        "adjustable_color_temp": true
+      },
+      "storage_gb": [32],
+      "connectivity": ["Wi-Fi", "USB-C", "无线充电"],
+      "battery": { "claimed_weeks": 12 },
+      "waterproof_ipx": "IPX8",
+      "weight_g": 215,
+      "colors": ["黑色 (Black)", "树莓红 (Raspberry)", "玉绿 (Jade)"],
+      "highlights": [
+        "Paperwhite 旗舰版，含全部 PW 功能",
+        "自动感光调节前灯",
+        "支持 Qi 无线充电",
+        "32GB 大容量存储"
+      ],
+      "best_for": "不想用线充电、追求全功能的阅读用户"
+    },
+    {
+      "id": "kindle_colorsoft_2024",
+      "name": "Kindle Colorsoft Signature Edition（2024）",
+      "series": "Colorsoft",
+      "generation": "第1代 Colorsoft",
+      "released": "2024-10-30",
+      "status": "在售",
+      "price_usd": { "without_ads": 279.99 },
+      "price_cny_approx": "约 1999 元",
+      "display": {
+        "size_inch": 7,
+        "resolution_ppi_bw": 300,
+        "resolution_ppi_color": 150,
+        "technology": "E Ink Kaleido",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "auto_adjusting_light": true,
+        "adjustable_color_temp": true,
+        "color": true
+      },
+      "storage_gb": [32],
+      "connectivity": ["Wi-Fi", "USB-C", "无线充电"],
+      "battery": { "claimed_mah": 2310 },
+      "waterproof_ipx": "IPX8",
+      "weight_g": 219,
+      "colors": ["金属黑 (Metallic Black)"],
+      "highlights": [
+        "亚马逊首款彩色 Kindle",
+        "E Ink Kaleido 彩色屏幕，300ppi 黑白 / 150ppi 彩色",
+        "自动感光调节前灯 + 无线充电",
+        "可阅读彩色漫画、杂志、图文书"
+      ],
+      "not_included": ["主动笔支持"],
+      "best_for": "喜欢阅读漫画、图文杂志、儿童书籍的用户"
+    },
+    {
+      "id": "kindle_colorsoft_2025",
+      "name": "Kindle Colorsoft（2025）",
+      "series": "Colorsoft",
+      "generation": "第2代 Colorsoft（标准版）",
+      "released": "2025-07-25",
+      "status": "在售",
+      "price_usd": { "without_ads": 249.99 },
+      "price_cny_approx": "约 1799 元",
+      "display": {
+        "size_inch": 7,
+        "resolution_ppi_bw": 300,
+        "resolution_ppi_color": 150,
+        "technology": "E Ink Kaleido",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "auto_adjusting_light": false,
+        "color": true
+      },
+      "storage_gb": [16],
+      "connectivity": ["Wi-Fi", "USB-C"],
+      "battery": {},
+      "waterproof_ipx": "IPX8",
+      "weight_g": 215,
+      "colors": ["黑色 (Black)"],
+      "differences_vs_colorsoft_se": [
+        "比 SE 版便宜 $30",
+        "16GB 存储（SE 为 32GB）",
+        "无自动感光调节前灯",
+        "无无线充电",
+        "轻 4g（215g vs 219g）"
+      ],
+      "best_for": "想要彩色显示但不需要旗舰功能的用户"
+    },
+    {
+      "id": "kindle_scribe_2024",
+      "name": "Kindle Scribe（2024）",
+      "series": "Scribe",
+      "generation": "第1代 Scribe（2024年更新）",
+      "released": "2024-12-04",
+      "status": "在售，部分库存仍可购",
+      "price_usd": { "base": 399.99 },
+      "display": {
+        "size_inch": 10.2,
+        "resolution_ppi": 300,
+        "technology": "E Ink",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "adjustable_color_temp": true
+      },
+      "storage_gb": [16, 32, 64],
+      "connectivity": ["Wi-Fi", "USB-C"],
+      "stylus": "含 Premium 触控笔（无需充电）",
+      "weight_g": 433,
+      "colors": ["金属玉绿 (Metallic Jade)", "钨灰 (Tungsten)"],
+      "highlights": [
+        "白色边框新设计",
+        "支持 Active Canvas（在电子书中直接手写批注）",
+        "AI 笔记摘要和优化（LLM 驱动）",
+        "Extended Margin 侧边面板"
+      ],
+      "notes": "2022年原版固件 5.17.2 更新后也获得 Active Canvas 和 AI 笔记功能",
+      "best_for": "学生、需要做笔记的读者、文档标注工作者"
+    },
+    {
+      "id": "kindle_scribe_3_frontlit",
+      "name": "Kindle Scribe（2025，带前灯）",
+      "series": "Scribe",
+      "generation": "第3代 Scribe",
+      "released": "2025-12-10",
+      "status": "在售",
+      "price_usd": { "base": 499.99 },
+      "display": {
+        "size_inch": 11,
+        "resolution_ppi": 300,
+        "technology": "E Ink Carta / Oxide",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "notes": "新型微型 LED 前灯系统，屏幕与表层间距缩小"
+      },
+      "storage_gb": [32, 64],
+      "connectivity": ["Wi-Fi", "USB-C"],
+      "stylus": "含新款 Premium 触控笔（磁吸强度升级）",
+      "thickness_mm": 5.4,
+      "weight_g": 400,
+      "writing_latency_ms": 12,
+      "highlights": [
+        "11寸大屏（前代 10.2 寸升级）",
+        "比前代轻 33g（400g vs 433g）",
+        "比前代快 40%",
+        "手写延迟低于 12ms",
+        "纹理化玻璃，书写质感更接近纸张",
+        "四核处理器"
+      ],
+      "best_for": "专业笔记用户、需要大屏阅读和书写的用户"
+    },
+    {
+      "id": "kindle_scribe_colorsoft_2025",
+      "name": "Kindle Scribe Colorsoft（2025）",
+      "series": "Scribe Colorsoft",
+      "generation": "第1代 Scribe Colorsoft",
+      "released": "2025-12-10",
+      "status": "在售（Fig 颜色曾短暂缺货至 2026 年 4 月中旬）",
+      "price_usd": { "32gb": 629.99, "64gb": 679.99 },
+      "display": {
+        "size_inch": 11,
+        "resolution_ppi_bw": 300,
+        "resolution_ppi_color": 150,
+        "technology": "E Ink Kaleido 3 / Oxide",
+        "glare_free": true,
+        "flush_front": true,
+        "front_light": true,
+        "color": true,
+        "notes": "定制氧化物 (oxide) 基础显示屏，高对比彩色，书写不产生闪烁"
+      },
+      "storage_gb": [32, 64],
+      "connectivity": ["Wi-Fi", "USB-C"],
+      "stylus": "含 Premium 触控笔（磁吸强化，无需充电）",
+      "thickness_mm": 5.4,
+      "weight_g": 400,
+      "pen_colors": 10,
+      "highlighter_colors": 5,
+      "highlights": [
+        "首款彩色 Scribe",
+        "支持10种钢笔颜色 + 5种荧光笔颜色 + 渐变工具",
+        "AI 笔记搜索、摘要与洞察",
+        "支持导出至 Microsoft OneNote",
+        "可阅读彩色漫画和图文书",
+        "Active Canvas：在电子书中行内手写批注"
+      ],
+      "not_yet_available": ["全局深色模式（计划 2026 年固件更新）", "Ask This Book / Story So Far（计划 2026 年更新）"],
+      "competitors": ["reMarkable Paper Pro（$579）", "Onyx Boox Note Air5 C（$529）"],
+      "best_for": "重度笔记用户、创意工作者、学生、愿意为彩色书写买单的用户"
+    }
+  ],
+
+  "comparison_table": {
+    "description": "当前在售全系 Kindle 横向对比",
+    "columns": ["型号", "屏幕", "彩色", "存储", "防水", "手写笔", "无线充电", "起售价(USD)"],
+    "rows": [
+      ["Kindle (2024)", "6\" 300ppi", "否", "16GB", "否", "否", "否", "$110"],
+      ["Paperwhite (2024)", "7\" 300ppi", "否", "16GB", "IPX8", "否", "否", "$160"],
+      ["Paperwhite SE (2024)", "7\" 300ppi", "否", "32GB", "IPX8", "否", "是", "$200"],
+      ["Colorsoft SE (2024)", "7\" 彩色", "是", "32GB", "IPX8", "否", "是", "$280"],
+      ["Colorsoft (2025)", "7\" 彩色", "是", "16GB", "IPX8", "否", "否", "$250"],
+      ["Scribe (2024)", "10.2\" 300ppi", "否", "16-64GB", "否", "是(笔)", "否", "$400"],
+      ["Scribe 3 带灯 (2025)", "11\" 300ppi", "否", "32-64GB", "否", "是(笔)", "否", "$500"],
+      ["Scribe Colorsoft (2025)", "11\" 彩色", "是", "32-64GB", "否", "是(笔)", "否", "$630"]
+    ]
+  },
+
+  "buying_guide": {
+    "scenarios": [
+      {
+        "need": "价格最低、只需基础阅读",
+        "recommendation": "Kindle（2024）",
+        "reason": "最便宜（$110），够用的 6 寸屏，轻便"
+      },
+      {
+        "need": "主力阅读设备，有防水需求",
+        "recommendation": "Kindle Paperwhite（2024）",
+        "reason": "7 寸大屏 + IPX8 防水 + 12 周续航，性价比最高"
+      },
+      {
+        "need": "不想插线充电、要最好的 Paperwhite",
+        "recommendation": "Kindle Paperwhite Signature Edition（2024）",
+        "reason": "多出无线充电和自动感光调节，多花 $40 很值"
+      },
+      {
+        "need": "想看彩色漫画、杂志、图文书",
+        "recommendation": "Kindle Colorsoft（2025）或 Colorsoft SE（2024）",
+        "reason": "唯一有彩色屏的 7 寸 Kindle，SE 版多无线充电"
+      },
+      {
+        "need": "大屏阅读 + 手写笔记",
+        "recommendation": "Kindle Scribe 3（2025，带灯版）",
+        "reason": "11 寸屏、400g、12ms 书写延迟，AI 笔记功能"
+      },
+      {
+        "need": "彩色书写 + 最强笔记功能",
+        "recommendation": "Kindle Scribe Colorsoft（2025）",
+        "reason": "最高端产品，彩色手写 + 11 寸大屏，适合深度笔记用户"
+      },
+      {
+        "need": "儿童使用",
+        "recommendation": "Kindle Kids（对应各代基础版套装）",
+        "reason": "含2年保修 + 保护壳 + 家长控制，预装 Kids+ 服务"
+      }
+    ]
+  },
+
+  "tutorials": {
+    "setup": [
+      {
+        "title": "初次设置 Kindle",
+        "steps": [
+          "开机后连接 Wi-Fi",
+          "使用亚马逊账号登录（或注册新账号）",
+          "在「设置 > 我的账户」确认账号绑定",
+          "进入「商店」即可浏览购书"
+        ]
+      },
+      {
+        "title": "更改语言为中文",
+        "steps": [
+          "「设置」>「设备选项」>「语言和词典」>「语言」",
+          "选择「中文（简体）」",
+          "重启后界面变为中文"
+        ]
+      }
+    ],
+    "reading": [
+      {
+        "title": "调整字体与版面",
+        "steps": [
+          "阅读中点击屏幕顶部唤出菜单",
+          "点击 Aa 图标进入字体设置",
+          "可调字体大小、字体种类、行距、页边距"
+        ]
+      },
+      {
+        "title": "添加书签和高亮",
+        "steps": [
+          "书签：点击右上角书签图标",
+          "高亮：长按文字，拖动选择范围，松手后选择高亮颜色",
+          "添加笔记：高亮后点击「笔记」，输入内容"
+        ]
+      },
+      {
+        "title": "使用 X-Ray 功能",
+        "content": "支持 X-Ray 的书籍可查看人物关系、地名、词汇解释。阅读中点击顶部菜单 > X-Ray。"
+      },
+      {
+        "title": "使用 Word Wise（英文学习）",
+        "content": "阅读英文书时，Word Wise 会在难词上方显示简短提示。设置 > 阅读选项 > Word Wise 开启。"
+      }
+    ],
+    "sideloading": [
+      {
+        "title": "发送文档到 Kindle（Send to Kindle）",
+        "methods": [
+          {
+            "name": "邮件发送",
+            "steps": [
+              "在「管理内容和设备」找到你的 @kindle.com 邮箱",
+              "在亚马逊后台添加发件人邮箱白名单",
+              "将文件（EPUB/PDF/DOCX 等）作为附件发送到该邮箱",
+              "设备联网后自动同步"
+            ]
+          },
+          {
+            "name": "USB 拖拽（2024款前设备）",
+            "steps": [
+              "USB 连接电脑",
+              "在文件管理器找到 Kindle 设备",
+              "将文件拖入 documents 文件夹"
+            ]
+          },
+          {
+            "name": "USB 拖拽（2024款新设备）",
+            "steps": [
+              "Windows：使用文件资源管理器直接拖拽（设备显示为「Kindle」而非通用 USB 设备）",
+              "Mac：需安装 Android File Transfer 或 OpenMTP",
+              "注意：2024款已移除通过「管理内容和设备」下载并传输购买书籍的功能"
+            ]
+          },
+          {
+            "name": "Send to Kindle 应用（Windows/Mac）",
+            "steps": [
+              "下载 Send to Kindle 桌面应用",
+              "登录亚马逊账号",
+              "拖拽文件到应用或右键选择「发送到 Kindle」"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "使用 Calibre 管理书库",
+        "intro": "Calibre 是最流行的第三方电子书管理软件，支持格式转换和传书到 Kindle。",
+        "steps": [
+          "下载安装 Calibre（calibre-ebook.com）",
+          "导入 EPUB 书籍到 Calibre 书库",
+          "选择书籍，点击「转换书籍」，输出格式选 AZW3（推荐）或 MOBI",
+          "连接 Kindle USB，在 Calibre 中点击「发送到设备」",
+          "Mac 用户需先在系统中卸载 Kindle，Calibre 才能识别"
+        ],
+        "format_notes": {
+          "AZW3": "推荐格式，支持丰富排版，可侧载到 Kindle",
+          "MOBI": "已过时，功能有限，但兼容老设备",
+          "KFX": "最新原生格式，需额外插件，Calibre 默认不支持输出",
+          "EPUB": "亚马逊现支持通过邮件发送 EPUB，设备内自动转换"
+        },
+        "known_issues": [
+          "侧载书籍可能出现封面被替换为通用封面的问题（Kindle 尝试从亚马逊服务器获取封面失败）",
+          "解决方法：在 Calibre 的书籍元数据中添加 Amazon ASIN 识别符"
+        ]
+      }
+    ],
+    "advanced_tips": [
+      {
+        "title": "使用 Kindle Unlimited",
+        "content": "月费约 $11.99（美区），可免费阅读超过 400 万本书籍。借阅最多同时持有 20 本，归还后可借新书。"
+      },
+      {
+        "title": "使用亚马逊 Prime Reading",
+        "content": "Prime 会员可免费阅读精选书目（数量比 KU 少），无需额外订阅。"
+      },
+      {
+        "title": "开启飞行模式节省电量",
+        "content": "「设置 > 无线」关闭 Wi-Fi。不联网时 Kindle 可显著延长待机时间（理论续航大幅提升）。"
+      },
+      {
+        "title": "管理 Collections（书单分组）",
+        "content": "长按书籍封面 > 「添加到书单」。可按类型、作者、进度等自定义分组。"
+      },
+      {
+        "title": "导出笔记和高亮",
+        "content": "amazon.com/mynotes 可在线查看所有高亮笔记；也可用 Calibre 插件导出为文本文件。"
+      },
+      {
+        "title": "Goodreads 集成",
+        "content": "Kindle 支持绑定 Goodreads，阅读进度自动同步，可在设备上标记「在读」「想读」。"
+      },
+      {
+        "title": "VoiceView 无障碍朗读",
+        "content": "「设置 > 无障碍功能 > VoiceView」开启屏幕朗读，可通过蓝牙耳机收听。"
+      },
+      {
+        "title": "Audible 有声书",
+        "content": "部分 Kindle 型号（需有 Audible 支持）可配合蓝牙耳机收听有声书。Whispersync 功能支持阅读与收听进度同步。"
+      }
+    ]
+  },
+
+  "formats": {
+    "native_supported": [
+      { "format": "AZW3 / KFX", "notes": "Kindle 原生格式，最佳排版支持" },
+      { "format": "MOBI", "notes": "旧版格式，功能受限，部分老设备支持" },
+      { "format": "PDF", "notes": "支持但排版固定，不可自由缩放字体" },
+      { "format": "TXT", "notes": "纯文本" },
+      { "format": "HTML / HTM", "notes": "基础网页格式" },
+      { "format": "DOCX", "notes": "通过 Send to Kindle 自动转换" }
+    ],
+    "via_conversion": [
+      { "format": "EPUB", "notes": "发送至 @kindle.com 后自动转换；或用 Calibre 手动转换" }
+    ],
+    "not_supported": [
+      { "format": "CBZ / CBR", "notes": "漫画格式，原生不支持，需转换" }
+    ],
+    "notes": "2022年后亚马逊停止接受通过邮件发送 MOBI 文件；EPUB 现为推荐的发送格式。"
+  },
+
+  "faq": [
+    {
+      "q": "Kindle 支持中文电子书吗？",
+      "a": "支持。亚马逊中国区有大量中文电子书，国际区也有部分中文内容。可直接在 Kindle 商店购买，或通过 Send to Kindle 发送 TXT/EPUB/DOCX 中文文件。"
+    },
+    {
+      "q": "Kindle 和 iPad 读书哪个好？",
+      "a": "各有优势。Kindle E Ink 屏幕护眼、无蓝光、续航数周，适合长时间阅读。iPad 是 LCD/OLED 屏，彩色显示好、功能全面，但长时间阅读较费眼。若主要用途是阅读，Kindle 更专注。"
+    },
+    {
+      "q": "Kindle 可以看 PDF 吗？",
+      "a": "可以，但 PDF 是固定版面，字体无法自由调整。建议用 Calibre 将 PDF 转为 AZW3 后再传入，体验更好。"
+    },
+    {
+      "q": "如何更新 Kindle 固件？",
+      "a": "联网后「设置 > 设备选项 > 高级选项 > 更新您的 Kindle」，如无此选项说明已是最新版本。也可手动下载固件包通过 USB 更新。"
+    },
+    {
+      "q": "Kindle 能下载哪些应用？",
+      "a": "Kindle 是封闭生态，不支持安装 Android 应用。系统内置亚马逊书店、Kindle 阅读功能、Goodreads 等。Scribe 系列额外有笔记本功能。"
+    },
+    {
+      "q": "Kindle 可以借阅图书馆电子书吗？",
+      "a": "美国用户可通过 OverDrive/Libby 借阅图书馆电子书。2024 款新 Kindle 需通过无线传输，不再支持 USB 的「下载并传输」方式。中国大陆地区图书馆借阅暂不支持。"
+    },
+    {
+      "q": "Kindle Oasis 还能买吗？",
+      "a": "Oasis 3 已于 2024 年初停止在美国销售，亚马逊也宣布不会再发布带实体翻页键的新设备。目前无法从亚马逊官方新购，部分第三方平台可能有库存。"
+    },
+    {
+      "q": "Kindle 和 Kobo 的区别？",
+      "a": "Kindle 深度绑定亚马逊生态，书籍管理方便，内容丰富；Kobo 支持 OverDrive 借阅、原生 EPUB，生态更开放。Kobo 不支持直接购买亚马逊电子书。"
+    },
+    {
+      "q": "Kindle 可以免费看书吗？",
+      "a": "可以。方法有：1）Kindle Unlimited 订阅（月费）；2）Prime Reading（Prime 会员专属）；3）Project Gutenberg 等提供大量公版电子书免费下载；4）图书馆借阅（美国支持）。"
+    },
+    {
+      "q": "2024 年 Kindle 支持侧载吗？",
+      "a": "支持。USB 拖拽仍然有效（Windows 直接用文件管理器，Mac 需要 Android File Transfer）；Send to Kindle 邮件和应用也仍可用。唯一的变化是移除了「管理内容和设备」页面的 USB 下载功能，且 Mac 需要额外软件。"
+    },
+    {
+      "q": "Kindle Scribe 可以在书上直接写字吗？",
+      "a": "可以，2024年更新后 Scribe 支持 Active Canvas 功能，可在可回流电子书中直接手写批注，书中文字会自动绕排。"
+    },
+    {
+      "q": "Kindle 屏幕碎了怎么办？",
+      "a": "Kindle 屏幕损坏通常无法自行更换，建议联系亚马逊客服查询维修/换新方案。Kindle Kids 版含2年保修，包括意外损坏更换。"
+    },
+    {
+      "q": "如何查找我的 Kindle 型号？",
+      "a": "方法1：设置 > 设备选项 > 设备信息，查看序列号，在亚马逊官网对应页面可查型号。方法2：设备背面有型号标识（如 C2V2L3）。"
+    },
+    {
+      "q": "Kindle 支持有声书吗？",
+      "a": "部分型号支持通过蓝牙连接耳机收听 Audible 有声书。基础 Kindle（2024）无 Audible 支持，Paperwhite 及以上版本支持。"
+    },
+    {
+      "q": "Kindle 如何防止误触？",
+      "a": "长按电源键锁屏；或在「设置 > 设备选项」中设置锁屏时间。屏保状态下触摸屏幕不会翻页。"
+    }
+  ],
+
+  "discontinued_models": [
+    {
+      "name": "Kindle Oasis（第3代，2019）",
+      "notes": "最后一款带实体翻页按键的 Kindle，2024年初停售。7寸屏，IPX8，铝合金机身。",
+      "price_was_usd": 249
+    },
+    {
+      "name": "Kindle Voyage（2014）",
+      "notes": "已停产，带触觉反馈翻页区域，6寸 300ppi 屏。"
+    },
+    {
+      "name": "Kindle Paperwhite（第1-4代）",
+      "notes": "历代已停产，第5代（2021）仍有部分渠道销售。"
+    },
+    {
+      "name": "Kindle（第1-10代基础版）",
+      "notes": "历代已停产，现售为第11代（2022/2024更新版）。"
+    }
+  ],
+
+  "accessories": [
+    {
+      "name": "官方 Kindle 保护套",
+      "compatible": "各型号有专属版本",
+      "notes": "Paperwhite 系列有官方「轻薄织物保护套」，支持翻盖自动唤醒/休眠"
+    },
+    {
+      "name": "USB-C 充电线",
+      "notes": "2019年 Oasis 起逐步转用 USB-C；2022年 Scribe 起全线 USB-C；不含充电头"
+    },
+    {
+      "name": "Kindle 无线充电底座",
+      "compatible": "Paperwhite SE / Colorsoft SE（支持 Qi 无线充电）",
+      "notes": "官方底座单独出售"
+    },
+    {
+      "name": "Premium 触控笔",
+      "compatible": "Kindle Scribe 系列",
+      "notes": "无需充电，磁吸附于设备侧面；2025款 Scribe 附带新款笔（磁力更强）"
+    }
+  ],
+
+  "ecosystem": {
+    "apps": [
+      { "name": "Kindle for iOS", "platform": "iPhone / iPad", "notes": "支持云端书库同步，进度/高亮同步" },
+      { "name": "Kindle for Android", "platform": "Android", "notes": "同上" },
+      { "name": "Kindle for PC", "platform": "Windows", "notes": "桌面阅读，支持 X-Ray 等功能" },
+      { "name": "Kindle for Mac", "platform": "macOS", "notes": "同上" },
+      { "name": "Kindle Cloud Reader", "platform": "浏览器", "notes": "无需安装，网页阅读，适合临时使用" }
+    ],
+    "services": [
+      { "name": "Kindle Store", "notes": "超过 600 万册电子书（美区）" },
+      { "name": "Kindle Unlimited", "price_usd_month": 11.99, "notes": "包月订阅，400万+ 书目" },
+      { "name": "Prime Reading", "notes": "Prime 会员专属，精选书目免费" },
+      { "name": "Audible", "notes": "亚马逊有声书平台，与 Kindle 支持 Whispersync 进度同步" },
+      { "name": "Send to Kindle", "notes": "支持邮件/应用/浏览器扩展发送个人文档到 Kindle" },
+      { "name": "Goodreads", "notes": "社交读书平台，Kindle 内置集成" }
+    ]
+  }
+}

@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.profile-bar{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap;}
+.profile-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.06em;padding:.2rem .55rem;border:1px solid #3a3020;color:#8a7a50;border-radius:2px;background:transparent;}
+.profile-tag.active{border-color:var(--amber);color:var(--amber);}
+.source-badge{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.06em;padding:.1rem .4rem;border-radius:2px;display:inline-block;margin-top:.4rem;}
+.source-badge.local{background:rgba(45,122,58,.15);color:#2d7a3a;border:1px solid rgba(45,122,58,.3);}
+.source-badge.deepseek{background:rgba(200,134,10,.1);color:var(--amber);border:1px solid rgba(200,134,10,.25);}
+.memory-hint{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a3a20;letter-spacing:.05em;padding:.5rem 0 .2rem;text-align:center;opacity:.6;}

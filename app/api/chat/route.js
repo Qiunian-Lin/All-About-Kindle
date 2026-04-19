@@ -582,7 +582,7 @@ function buildProfileContext(profile) {
 // § 8  Route Handler
 // ════════════════════════════════════════════════════════════
 
-const LOCAL_SCORE_THRESHOLD = 3; // 低于此值走 DeepSeek
+const LOCAL_SCORE_THRESHOLD = 5; // 低于此值走 DeepSeek
 
 export async function POST(req) {
   try {

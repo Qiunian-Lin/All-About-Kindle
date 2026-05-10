@@ -299,17 +299,27 @@ function TutorialItem({ t }) {
 */
 // ─────────────────────────────────────────────────────────────────────────────
 
-function generateShortUID() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 去掉易混淆的 0/O/1/I
-  const seg = (n) => Array.from({length:n}, () => chars[Math.floor(Math.random()*chars.length)]).join("");
-  return `${seg(4)}-${seg(4)}`;
-}
+export function getVisitorId() {
+  if (typeof window === "undefined") {
+    return "";
+  }
 
-function getOrCreateUID() {
-  if (typeof window === "undefined") return "";
-  let uid = localStorage.getItem("aok_uid");
-  if (!uid) { uid = generateShortUID(); localStorage.setItem("aok_uid", uid); }
-  return uid;
+  const key = "kindle_visitor_id";
+  let id = window.localStorage.getItem(key);
+
+  if (!id) {
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    const randomPart = Array.from({ length: 12 }, () => {
+      return chars[Math.floor(Math.random() * chars.length)];
+    }).join("");
+
+    id = `visitor_${Date.now().toString(36)}_${randomPart}`;
+
+    window.localStorage.setItem(key, id);
+  }
+
+  return id;
 }
 
 function ChatSection() {

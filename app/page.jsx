@@ -336,7 +336,9 @@ function ChatSection() {
   const [copied, setCopied] = useState(false);
   const boxRef = useRef(null);
 
-  useEffect(() => { setUidState(getOrCreateUID()); }, []);
+  useEffect(() => {
+  setUidState(getVisitorId());
+}, []);
   useEffect(() => { if(boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight; }, [msgs, loading]);
 
   function copyUID() {
@@ -347,7 +349,7 @@ function ChatSection() {
     const clean = uidInputVal.replace(/[\s-]/g,"").toUpperCase();
     if (clean.length !== 8) { alert("请输入 8 位字符，如 ABCD-1234"); return; }
     const fmt = `${clean.slice(0,4)}-${clean.slice(4)}`;
-    localStorage.setItem("aok_uid", fmt);
+    localStorage.setItem("kindle_visitor_id", fmt);
     setUidState(fmt); setUidInputVal(""); setShowUidPanel(false);
     setProfile(null); setHistory([]);
     setMsgs([{ role:"ai", html:`UID 已切换为 <code style="color:var(--amber);font-family:'JetBrains Mono',monospace">${fmt}</code><br>已加载该 ID 的历史偏好，继续聊吧 ✓` }]);
@@ -356,7 +358,7 @@ function ChatSection() {
   function resetUID() {
     if (!confirm("确认重置？将生成全新 UID，当前记忆无法找回。")) return;
     localStorage.removeItem("aok_uid");
-    const newId = getOrCreateUID();
+    const newId = getVisitorId();
     setUidState(newId); setProfile(null); setHistory([]); setShowUidPanel(false);
     setMsgs([{ role:"ai", html:"已重置身份 🔄<br>你好，我是 <strong>Kindle 助手</strong>，请问有什么想了解的？" }]);
   }

@@ -81,6 +81,27 @@ const globalCSS = `
 :root{--ink:#1a1208;--paper:#f5f0e8;--warm:#e8ddc8;--amber:#c8860a;--amber-light:#e8a020;--muted:#8a7a60;--border:#d4c8a8;--white:#fdfaf4;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+
+#models {
+  scroll-margin-top: 35px;
+}
+
+#compare {
+  scroll-margin-top: 80px;
+}
+
+#tutorials {
+  scroll-margin-top: 70px;
+}
+
+#quiz-section {
+  scroll-margin-top: 70px;
+}
+
+#chat-section {
+  scroll-margin-top: 40px;
+}
+
 body{font-family:'Noto Serif SC',serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
 
 /* grain */
@@ -164,6 +185,42 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .tut-body .tip{background:rgba(200,134,10,.08);border-left:3px solid var(--amber);padding:.7rem 1rem;margin:.8rem 0;font-size:.82rem;}
 .tut-body strong{color:var(--ink);font-weight:600;}
 
+/* ── 选购问卷 ── */
+.quiz-section{background:var(--warm);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:3.5rem 0;}
+.quiz-wrapper{max-width:700px;margin:0 auto;padding:0 2rem;}
+.quiz-sec-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--amber);margin-bottom:.6rem;}
+.quiz-sec-title{font-family:'Playfair Display',serif;font-size:1.75rem;margin-bottom:.4rem;}
+.quiz-sec-sub{font-size:.86rem;color:var(--muted);line-height:1.75;margin-bottom:2rem;}
+.quiz-steps{display:flex;gap:.5rem;margin-bottom:2rem;align-items:center;}
+.quiz-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s;}
+.quiz-step-dot.done{background:var(--amber);}
+.quiz-step-dot.active{background:var(--amber);box-shadow:0 0 0 3px rgba(200,134,10,.2);}
+.quiz-step-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--muted);margin-left:.5rem;}
+.quiz-q{font-size:1rem;font-weight:600;margin-bottom:1.2rem;color:var(--ink);}
+.quiz-options{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.8rem;}
+.quiz-opt{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.05em;padding:.65rem 1.1rem;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;border-radius:2px;transition:all .18s;line-height:1.4;}
+.quiz-opt:hover{border-color:var(--amber);color:var(--ink);}
+.quiz-opt.selected{background:var(--amber);color:var(--ink);border-color:var(--amber);font-weight:600;}
+.quiz-nav{display:flex;align-items:center;gap:1rem;}
+.quiz-btn-next{background:var(--ink);color:var(--paper);border:none;padding:.75rem 1.8rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s;}
+.quiz-btn-next:hover{background:#2a2010;}
+.quiz-btn-next:disabled{opacity:.3;cursor:not-allowed;}
+.quiz-btn-back{background:transparent;color:var(--muted);border:1px solid var(--border);padding:.75rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:pointer;border-radius:2px;}
+.quiz-btn-back:hover{border-color:var(--muted);}
+.quiz-result{background:var(--white);border:1px solid var(--border);border-radius:2px;padding:1.8rem;animation:msgIn .35s ease;}
+.quiz-result-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem;}
+.quiz-result-model{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.4rem;}
+.quiz-result-reason{font-size:.86rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem;}
+.quiz-result-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem;}
+.quiz-result-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--muted);}
+.quiz-cta-row{display:flex;gap:.8rem;flex-wrap:wrap;}
+.quiz-cta-primary{background:var(--amber);color:var(--ink);border:none;padding:.75rem 1.6rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:700;transition:background .2s;}
+.quiz-cta-primary:hover{background:var(--amber-light);}
+.quiz-cta-secondary{background:transparent;color:var(--muted);border:1px solid var(--border);padding:.75rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:pointer;border-radius:2px;}
+.quiz-cta-secondary:hover{border-color:var(--amber);color:var(--amber);}
+.quiz-reset{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);background:transparent;border:none;cursor:pointer;margin-top:1rem;text-decoration:underline;text-underline-offset:3px;}
+.quiz-reset:hover{color:var(--ink);}
+
 /* chat section */
 .chat-section{background:var(--ink);padding:4.5rem 0;}
 .chat-wrapper{max-width:780px;margin:0 auto;padding:0 2rem;}
@@ -210,7 +267,281 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .footer{padding:1.5rem 1.2rem;flex-direction:column;}
   .tut-body{padding-left:1.5rem;}
 }
+
+.uid-panel{background:#141008;border:1px solid #2a2010;border-radius:2px;padding:.9rem 1.2rem;margin-bottom:1rem;display:flex;flex-direction:column;gap:.7rem;}
+.uid-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:#4a3a20;margin-bottom:.2rem;}
+.uid-code{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--amber);letter-spacing:.18em;}
+.uid-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.28rem .7rem;border:1px solid #3a3020;background:transparent;color:#6a5a40;cursor:pointer;border-radius:2px;letter-spacing:.06em;transition:all .15s;}
+.uid-btn:hover{border-color:var(--amber);color:var(--amber);}
+.uid-tip{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:#4a3a20;line-height:1.7;}
+.uid-input-row{display:flex;gap:.5rem;}
+.uid-input{flex:1;font-family:'JetBrains Mono',monospace;font-size:.78rem;background:#1e1808;border:1px solid #3a3020;color:var(--paper);padding:.35rem .7rem;border-radius:2px;outline:none;letter-spacing:.1em;}
+.uid-input:focus{border-color:var(--amber);}
+.uid-input::placeholder{color:#3a2a10;letter-spacing:0;}
+.uid-confirm{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.35rem .85rem;background:var(--amber);color:var(--ink);border:none;cursor:pointer;border-radius:2px;font-weight:700;white-space:nowrap;}
+.profile-bar{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap;}
+.profile-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.2rem .55rem;border:1px solid #3a3020;color:#8a7a50;border-radius:2px;}
+.profile-tag.active{border-color:var(--amber);color:var(--amber);}
+.source-badge{font-family:'JetBrains Mono',monospace;font-size:.56rem;padding:.1rem .4rem;border-radius:2px;display:inline-block;margin-top:.4rem;}
+.source-badge.local{background:rgba(45,122,58,.15);color:#2d7a3a;border:1px solid rgba(45,122,58,.3);}
+.source-badge.deepseek{background:rgba(200,134,10,.1);color:var(--amber);border:1px solid rgba(200,134,10,.25);}
+.memory-hint{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a3a20;padding:.5rem 0;text-align:center;opacity:.6;}
+
 `;
+
+// ─── QUIZ SECTION ────────────────────────────────────────────────────────────
+
+const QUIZ_STEPS = [
+  {
+    id: "budget",
+    question: "你的预算范围大概是？",
+    options: [
+      { label: "600 元以内", value: "low", icon: "💰" },
+      { label: "600–1100 元", value: "mid", icon: "💳" },
+      { label: "1100–1600 元", value: "high", icon: "💎" },
+      { label: "1600 元以上", value: "top", icon: "🏆" },
+    ],
+  },
+  {
+    id: "usecase",
+    question: "你主要想用 Kindle 做什么？",
+    options: [
+      { label: "看小说 / 纯文字阅读", value: "reading", icon: "📖" },
+      { label: "看漫画 / 图文杂志", value: "manga", icon: "🎨" },
+      { label: "做手写笔记 / 批注", value: "notes", icon: "✏️" },
+      { label: "阅读 PDF / 学术文献", value: "pdf", icon: "📄" },
+    ],
+  },
+  {
+    id: "feature",
+    question: "有什么特别在意的功能？",
+    options: [
+      { label: "防水（浴室 / 游泳池边用）", value: "waterproof", icon: "💧" },
+      { label: "彩色屏幕", value: "color", icon: "🌈" },
+      { label: "无线充电", value: "wireless", icon: "⚡" },
+      { label: "没有特别要求", value: "none", icon: "✓" },
+    ],
+  },
+];
+
+// 根据三个维度输出推荐结果
+function calcResult(budget, usecase, feature) {
+  // Scribe 系列（笔记需求）
+  if (usecase === "notes") {
+    return {
+      model: "Kindle Scribe（第 2 代）",
+      price: "¥2,399 起",
+      reason:
+        "手写笔记是你的核心需求，Scribe 是 Kindle 全系唯一支持手写笔的型号。10.2 英寸大屏 + Premium Pen，可直接在电子书里批注，学术/工作场景首选。",
+      tags: ["10.2\" 大屏", "手写笔随附", "300 ppi", "约 12 周续航"],
+      chatPrompt: "我需要用 Kindle Scribe 做笔记，它的手写功能具体怎么样？有哪些使用技巧？",
+    };
+  }
+
+  // 彩色需求 → Colorsoft
+  if (usecase === "manga" || feature === "color") {
+    return {
+      model: "Kindle Colorsoft",
+      price: "¥1,499",
+      reason:
+        "彩色 E Ink 屏幕让漫画、杂志图文栩栩如生，同时保留了电子墨水屏的护眼特性。如果你喜欢看图文内容或漫画，Colorsoft 是当前唯一的彩色 Kindle 选择。",
+      tags: ["彩色 E Ink", "7\" 屏", "IPX8 防水", "32 GB"],
+      chatPrompt: "Kindle Colorsoft 看漫画体验怎么样？色彩还原度如何？",
+    };
+  }
+
+  // 超高预算 + PDF → Scribe
+  if (budget === "top" && usecase === "pdf") {
+    return {
+      model: "Kindle Scribe（第 2 代）",
+      price: "¥2,399 起",
+      reason:
+        "10.2 英寸大屏是阅读 PDF 学术文献最舒适的 Kindle 选择，无需缩放即可阅读 A4 版面。配合手写笔可直接在文献上批注，适合研究人员和重度学术用户。",
+      tags: ["10.2\" 大屏", "PDF 批注", "手写笔", "16/32/64 GB"],
+      chatPrompt: "Kindle Scribe 阅读 PDF 的体验怎么样？和普通 Kindle 差距有多大？",
+    };
+  }
+
+  // 低预算
+  if (budget === "low") {
+    return {
+      model: "Kindle 基础款（第 16 代）",
+      price: "¥558",
+      reason:
+        "预算 600 元内的最优解。6 英寸 300 ppi 高清屏，轻巧便携只有 158g，满足日常小说阅读完全够用。是体验电子墨水屏阅读性价比最高的入口。",
+      tags: ["6\" 轻便", "300 ppi", "158g", "约 6 周续航"],
+      chatPrompt: "Kindle 基础款和 Paperwhite 差距大吗？入门首选哪个？",
+    };
+  }
+
+  // 中等预算 + 防水 or 无线充 → Paperwhite SE
+  if ((budget === "high" || budget === "top") && (feature === "wireless" || feature === "waterproof")) {
+    return {
+      model: "Kindle Paperwhite Signature Edition",
+      price: "¥1,058",
+      reason:
+        "Paperwhite 系列旗舰版，在标准版基础上增加 Qi 无线充电、自动感光调节前灯和 32 GB 存储。防水 IPX8，可以在浴室或泳池边放心使用。",
+      tags: ["无线充电", "自动感光", "IPX8 防水", "32 GB"],
+      chatPrompt: "Paperwhite SE 和标准版 Paperwhite 具体有哪些区别，值得多花钱吗？",
+    };
+  }
+
+  // 中等预算（默认） → Paperwhite 标准版
+  if (budget === "mid" || budget === "high") {
+    return {
+      model: "Kindle Paperwhite（第 12 代）",
+      price: "¥858",
+      reason:
+        "综合性价比最高的选择，也是销量最好的 Kindle。7 英寸 300 ppi 大屏 + IPX8 防水 + 12 周超长续航，满足绝大多数阅读需求。",
+      tags: ["7\" 大屏", "IPX8 防水", "300 ppi", "约 12 周续航"],
+      chatPrompt: "Kindle Paperwhite 12代有哪些值得关注的新特性？和上一代比有什么改进？",
+    };
+  }
+
+  // 兜底
+  return {
+    model: "Kindle Paperwhite（第 12 代）",
+    price: "¥858",
+    reason:
+      "综合评估下来，Paperwhite 是最均衡的选择——7 英寸大屏、防水、长续航，几乎适合所有类型的读者。",
+    tags: ["7\" 大屏", "IPX8 防水", "300 ppi", "约 12 周续航"],
+    chatPrompt: "Kindle Paperwhite 12代的整体体验怎么样？适合我这样的用户吗？",
+  };
+}
+
+function QuizSection({ onSendToChat }) {
+  const [step, setStep] = useState(0);           // 0-2 问题，3 结果
+  const [answers, setAnswers] = useState({});    // { budget, usecase, feature }
+  const [current, setCurrent] = useState(null);  // 当前步骤的选中项
+
+  const stepKeys = ["budget", "usecase", "feature"];
+  const result = step === 3
+    ? calcResult(answers.budget, answers.usecase, answers.feature)
+    : null;
+
+  function handleNext() {
+    if (current === null) return;
+    const key = stepKeys[step];
+    const newAnswers = { ...answers, [key]: current };
+    setAnswers(newAnswers);
+    setCurrent(null);
+    setStep(s => s + 1);
+  }
+
+  function handleBack() {
+    if (step === 0) return;
+    setCurrent(answers[stepKeys[step - 1]] || null);
+    setStep(s => s - 1);
+  }
+
+  function reset() {
+    setStep(0);
+    setAnswers({});
+    setCurrent(null);
+  }
+
+  function sendToChat(prompt) {
+    // 滚动到 AI 问答区并触发预填问题
+    document.getElementById("chat-section")?.scrollIntoView({ behavior: "smooth" });
+    onSendToChat?.(prompt);
+  }
+
+  return (
+    <div className="quiz-section" id="quiz-section">
+      <div className="quiz-wrapper">
+        <div className="quiz-sec-label">// 选购向导</div>
+        <div className="quiz-sec-title">3 步找到适合你的 Kindle</div>
+        <div className="quiz-sec-sub">
+          回答几个简单问题，我们帮你从全系列中精准匹配——不用自己看参数表。
+        </div>
+
+        {/* 步骤指示器 */}
+        {step < 3 && (
+          <div className="quiz-steps">
+            {QUIZ_STEPS.map((_, i) => (
+              <div
+                key={i}
+                className={`quiz-step-dot ${i < step ? "done" : ""} ${i === step ? "active" : ""}`}
+              />
+            ))}
+            <span className="quiz-step-label">步骤 {step + 1} / {QUIZ_STEPS.length}</span>
+          </div>
+        )}
+
+        {/* 问题区域 */}
+        {step < 3 && (
+          <>
+            <div className="quiz-q">{QUIZ_STEPS[step].question}</div>
+            <div className="quiz-options">
+              {QUIZ_STEPS[step].options.map(opt => (
+                <button
+                  key={opt.value}
+                  className={`quiz-opt${current === opt.value ? " selected" : ""}`}
+                  onClick={() => setCurrent(opt.value)}
+                >
+                  {opt.icon} {opt.label}
+                </button>
+              ))}
+            </div>
+            <div className="quiz-nav">
+              {step > 0 && (
+                <button className="quiz-btn-back" onClick={handleBack}>← 上一步</button>
+              )}
+              <button
+                className="quiz-btn-next"
+                onClick={handleNext}
+                disabled={current === null}
+              >
+                {step === QUIZ_STEPS.length - 1 ? "查看推荐结果 →" : "下一步 →"}
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* 结果区域 */}
+        {step === 3 && result && (
+          <div className="quiz-result">
+            <div className="quiz-result-label">✦ 为你推荐</div>
+            <div className="quiz-result-model">{result.model}</div>
+            <div style={{
+              fontFamily: "'JetBrains Mono',monospace",
+              fontSize: ".9rem",
+              color: "var(--amber)",
+              marginBottom: ".8rem"
+            }}>
+              {result.price}
+            </div>
+            <div className="quiz-result-reason">{result.reason}</div>
+            <div className="quiz-result-tags">
+              {result.tags.map(t => (
+                <span key={t} className="quiz-result-tag">{t}</span>
+              ))}
+            </div>
+            <div className="quiz-cta-row">
+              <button
+                className="quiz-cta-primary"
+                onClick={() => sendToChat(result.chatPrompt)}
+              >
+                继续问 AI 助手 →
+              </button>
+              <button
+                className="quiz-cta-secondary"
+                onClick={() => {
+                  document.getElementById("models")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                查看完整型号库
+              </button>
+            </div>
+            <button className="quiz-reset" onClick={reset}>重新作答</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
@@ -279,194 +610,196 @@ function TutorialItem({ t }) {
 */
 // ─────────────────────────────────────────────────────────────────────────────
 
-function ChatSection() {
+export function getVisitorId() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  const key = "kindle_visitor_id";
+  let id = window.localStorage.getItem(key);
+
+  if (!id) {
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    const randomPart = Array.from({ length: 12 }, () => {
+      return chars[Math.floor(Math.random() * chars.length)];
+    }).join("");
+
+    id = `visitor_${Date.now().toString(36)}_${randomPart}`;
+
+    window.localStorage.setItem(key, id);
+  }
+
+  return id;
+}
+
+function ChatSection({ externalPrompt, onExternalPromptUsed }) {
   const [msgs, setMsgs] = useState([
-    { role: "ai", html: "你好！我是 <strong>Kindle 助手</strong>，专门解答关于 Kindle 的一切问题 📖<br><br>型号选购、格式推送、字体安装、越狱教程、故障排查……都可以问我～<br><br><em style='color:var(--amber);font-size:.8rem;font-style:normal'>💡 我会记住你的偏好，越聊越懂你的需求。</em>" }
+    { role:"ai", html:"你好！我是 <strong>Kindle 助手</strong>，专门解答关于 Kindle 的一切问题 📖<br><br>型号选购、格式推送、字体安装、越狱教程、故障排查……都可以问我～<br><br><em style='color:var(--amber);font-size:.8rem;font-style:normal'>💡 我会记住你的偏好，越聊越懂你的需求。</em>" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
-  // 用户画像状态（从 API 返回值实时更新）
   const [profile, setProfile] = useState(null);
+  const [uid, setUidState] = useState("");
+  const [showUidPanel, setShowUidPanel] = useState(false);
+  const [uidInputVal, setUidInputVal] = useState("");
+  const [copied, setCopied] = useState(false);
   const boxRef = useRef(null);
 
-  // ── visitorId：优先使用 crypto.randomUUID，降级用时间戳 ──
-  function getVisitorId() {
-    if (typeof window === "undefined") return "";
-    let id = localStorage.getItem("all_of_kindle_visitor_id");
-    if (!id) {
-      id = crypto.randomUUID?.() || `visitor_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-      localStorage.setItem("all_of_kindle_visitor_id", id);
+  useEffect(() => {
+  setUidState(getVisitorId());
+}, []);
+  useEffect(() => { if(boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight; }, [msgs, loading]);
+  // 接收问卷传来的 prompt，自动发送
+  useEffect(() => {
+    if (externalPrompt) {
+      send(externalPrompt);
+      onExternalPromptUsed?.();
     }
-    return id;
+}, [externalPrompt]);
+
+  function copyUID() {
+    navigator.clipboard?.writeText(uid).then(() => { setCopied(true); setTimeout(()=>setCopied(false),2000); });
   }
 
-  useEffect(() => {
-    if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
-  }, [msgs, loading]);
+  function applyManualUID() {
+    const clean = uidInputVal.replace(/[\s-]/g,"").toUpperCase();
+    if (clean.length !== 8) { alert("请输入 8 位字符，如 ABCD-1234"); return; }
+    const fmt = `${clean.slice(0,4)}-${clean.slice(4)}`;
+    localStorage.setItem("kindle_visitor_id", fmt);
+    setUidState(fmt); setUidInputVal(""); setShowUidPanel(false);
+    setProfile(null); setHistory([]);
+    setMsgs([{ role:"ai", html:`UID 已切换为 <code style="color:var(--amber);font-family:'JetBrains Mono',monospace">${fmt}</code><br>已加载该 ID 的历史偏好，继续聊吧 ✓` }]);
+  }
+
+  function resetUID() {
+    if (!confirm("确认重置？将生成全新 UID，当前记忆无法找回。")) return;
+    localStorage.removeItem("aok_uid");
+    const newId = getVisitorId();
+    setUidState(newId); setProfile(null); setHistory([]); setShowUidPanel(false);
+    setMsgs([{ role:"ai", html:"已重置身份 🔄<br>你好，我是 <strong>Kindle 助手</strong>，请问有什么想了解的？" }]);
+  }
 
   async function send(text) {
-    const q = (text || input).trim();
-    if (!q || loading) return;
+    const q = (text||input).trim();
+    if (!q||loading) return;
     setInput("");
-    setMsgs(m => [...m, { role: "user", html: fmtMsg(q) }]);
-    const nh = [...history, { role: "user", content: q }];
-    setHistory(nh);
-    setLoading(true);
-
+    setMsgs(m=>[...m,{role:"user",html:fmtMsg(q)}]);
+    const nh = [...history,{role:"user",content:q}];
+    setHistory(nh); setLoading(true);
     try {
-      const visitorId = getVisitorId();
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitorId, messages: nh }),
-      });
-
+      const res = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({visitorId:uid,messages:nh})});
       const data = await res.json();
-      const reply = data.reply || "未收到有效回复";
-      const source = data.source || "deepseek"; // "local" | "deepseek"
-
-      // 更新画像状态
+      const reply = data.reply||"未收到有效回复";
       if (data.profile) setProfile(data.profile);
-
-      // 在消息气泡底部附加来源标签
-      const sourceBadge = source === "local"
+      const badge = data.source==="local"
         ? `<span class="source-badge local">📚 本地知识库</span>`
         : `<span class="source-badge deepseek">✦ DeepSeek AI</span>`;
-
-      setMsgs(m => [...m, { role: "ai", html: fmtMsg(reply) + "<br>" + sourceBadge }]);
-      setHistory(h => [...h, { role: "assistant", content: reply }]);
-    } catch (e) {
-      setMsgs(m => [...m, { role: "ai", html: `请求失败：${e.message}` }]);
+      setMsgs(m=>[...m,{role:"ai",html:fmtMsg(reply)+"<br>"+badge}]);
+      setHistory(h=>[...h,{role:"assistant",content:reply}]);
+    } catch(e) {
+      setMsgs(m=>[...m,{role:"ai",html:`请求失败：${e.message}`}]);
     }
-
     setLoading(false);
   }
 
-  // ── 画像标签渲染（显示在输入框上方）──────────────────────
   function renderProfileTags() {
-    if (!profile || profile.messageCount < 2) return null;
-
-    const tags = [];
-
-    if (profile.budget) {
-      const label = { low: "💰 入门预算", mid: "💳 中等预算", high: "💎 高端预算" };
-      tags.push(label[profile.budget]);
-    }
-
-    const useCaseMap = { manga: "🎨 看漫画", notes: "✏️ 做笔记", pdf: "📄 看PDF", reading: "📖 纯阅读", study: "🎓 学习备考" };
-    profile.useCase?.slice(0, 2).forEach(u => {
-      if (useCaseMap[u]) tags.push(useCaseMap[u]);
-    });
-
-    if (profile.needWaterproof) tags.push("💧 防水");
-    if (profile.needColor) tags.push("🌈 彩色屏");
-    if (profile.needStylus) tags.push("🖊️ 手写笔");
-
-    if (tags.length === 0) return null;
-
+    if (!profile||profile.messageCount<2) return null;
+    const tags=[];
+    if(profile.budget){const l={low:"💰 入门预算",mid:"💳 中等预算",high:"💎 高端预算"};tags.push(l[profile.budget]);}
+    const ucm={manga:"🎨 看漫画",notes:"✏️ 做笔记",pdf:"📄 看PDF",reading:"📖 纯阅读",study:"🎓 学习"};
+    profile.useCase?.slice(0,2).forEach(u=>{if(ucm[u])tags.push(ucm[u]);});
+    if(profile.needWaterproof)tags.push("💧 防水");
+    if(profile.needColor)tags.push("🌈 彩色屏");
+    if(profile.needStylus)tags.push("🖊️ 手写笔");
+    if(!tags.length) return null;
     return (
       <div className="profile-bar">
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: ".56rem", color: "#4a3a20", letterSpacing: ".08em" }}>
-          我的偏好：
-        </span>
-        {tags.map((t, i) => (
-          <span key={i} className="profile-tag active">{t}</span>
-        ))}
-        {/* 清除画像按钮 */}
-        <button
-          onClick={clearProfile}
-          title="清除记忆，重新开始"
-          style={{
-            marginLeft: "auto", fontFamily: "'JetBrains Mono',monospace", fontSize: ".55rem",
-            background: "transparent", border: "1px solid #2a2010", color: "#4a3a20",
-            padding: ".15rem .45rem", cursor: "pointer", borderRadius: "2px",
-          }}
-        >
-          ✕ 清除记忆
-        </button>
+        <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:".56rem",color:"#4a3a20"}}>我的偏好：</span>
+        {tags.map((t,i)=><span key={i} className="profile-tag active">{t}</span>)}
       </div>
     );
   }
 
-  // ── 清除用户画像（仅删除本地 ID，服务端记录自然失效）──────
-  function clearProfile() {
-    if (!confirm("确认清除对话记忆？下次对话将重新开始。")) return;
-    localStorage.removeItem("all_of_kindle_visitor_id");
-    setProfile(null);
-    setHistory([]);
-    setMsgs([{
-      role: "ai",
-      html: "记忆已清除 🗑️<br>你好，我是 <strong>Kindle 助手</strong>，请问有什么想了解的？"
-    }]);
+  function renderUidPanel() {
+    if (!showUidPanel) return null;
+    return (
+      <div className="uid-panel">
+        <div style={{display:"flex",alignItems:"center",gap:"1rem"}}>
+          <div><div className="uid-label">你的记忆 ID</div><div className="uid-code">{uid}</div></div>
+          <div style={{display:"flex",gap:".5rem",marginLeft:"auto"}}>
+            <button className="uid-btn" onClick={copyUID}>{copied?"✓ 已复制":"复制"}</button>
+            <button className="uid-btn" onClick={resetUID} style={{color:"#7a3a30",borderColor:"#3a2020"}}>重置</button>
+          </div>
+        </div>
+        <div className="uid-tip">📋 记住这串 ID，在其他设备上输入后可延续对话记忆。<br/>清除浏览器数据前请先复制，否则记忆将无法恢复。</div>
+        <div>
+          <div className="uid-label" style={{marginBottom:".4rem"}}>切换到其他 ID</div>
+          <div className="uid-input-row">
+            <input className="uid-input" value={uidInputVal} onChange={e=>setUidInputVal(e.target.value)}
+              placeholder="输入其他设备的 ID，如 ABCD-1234"
+              onKeyDown={e=>e.key==="Enter"&&applyManualUID()} />
+            <button className="uid-confirm" onClick={applyManualUID}>切换 →</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <section className="chat-section" id="chat-section">
       <div className="chat-wrapper">
-        <div className="chat-sec-label">// AI 智能问答</div>
-        <div className="chat-sec-title">问问 Kindle 助手</div>
-        <div className="chat-sec-sub">
-          由 DeepSeek AI 驱动，支持型号选购、使用教程、越狱指南、故障排查等所有 Kindle 相关问题。
-          {profile && profile.messageCount > 1 && (
-            <span style={{ color: "var(--amber)", fontSize: ".8rem", marginLeft: ".5rem" }}>
-              （已记住你的 {profile.messageCount} 条对话偏好）
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
+          <div>
+            <div className="chat-sec-label">// AI 智能问答</div>
+            <div className="chat-sec-title">问问 Kindle 助手</div>
+          </div>
+          <button onClick={()=>setShowUidPanel(v=>!v)} title="管理你的记忆 ID"
+            style={{marginTop:".3rem",fontFamily:"'JetBrains Mono',monospace",fontSize:".6rem",letterSpacing:".08em",
+              padding:".32rem .75rem",background:"transparent",cursor:"pointer",borderRadius:"2px",transition:"all .15s",flexShrink:0,
+              border:`1px solid ${showUidPanel?"var(--amber)":"#2a2010"}`,
+              color:showUidPanel?"var(--amber)":"#5a4a30"}}>
+            UID · {uid||"…"}
+          </button>
+        </div>
+        <div className="chat-sec-sub" style={{marginTop:".5rem"}}>
+          由 DeepSeek AI 驱动，支持型号选购、使用教程、越狱指南、故障排查等问题。
+          {profile&&profile.messageCount>1&&(
+            <span style={{color:"var(--amber)",fontSize:".8rem",marginLeft:".5rem"}}>
+              （已记住 {profile.messageCount} 条对话偏好）
             </span>
           )}
         </div>
-
-        {/* 快捷问题 */}
+        {renderUidPanel()}
         <div className="quick-row">
-          {QUICK_Q.map(q => (
-            <button key={q} className="quick-btn" onClick={() => send(q)}>
-              {q.length > 16 ? q.slice(0, 16) + "…" : q}
+          {QUICK_Q.map(q=>(
+            <button key={q} className="quick-btn" onClick={()=>send(q)}>
+              {q.length>16?q.slice(0,16)+"…":q}
             </button>
           ))}
         </div>
-
-        {/* 消息区域 */}
         <div className="chat-box" ref={boxRef}>
-          {msgs.map((m, i) => (
+          {msgs.map((m,i)=>(
             <div key={i} className={`msg ${m.role}`}>
-              <div className="msg-av">{m.role === "ai" ? "K" : "U"}</div>
-              <div className="msg-bubble" dangerouslySetInnerHTML={{ __html: m.html }} />
+              <div className="msg-av">{m.role==="ai"?"K":"U"}</div>
+              <div className="msg-bubble" dangerouslySetInnerHTML={{__html:m.html}}/>
             </div>
           ))}
-          {loading && (
+          {loading&&(
             <div className="msg ai">
               <div className="msg-av">K</div>
-              <div className="msg-bubble">
-                <div className="dots">
-                  <div className="dot" /><div className="dot" /><div className="dot" />
-                </div>
-              </div>
+              <div className="msg-bubble"><div className="dots"><div className="dot"/><div className="dot"/><div className="dot"/></div></div>
             </div>
           )}
-          {/* 历史消息超过3条时，显示记忆提示 */}
-          {history.length > 5 && (
-            <div className="memory-hint">
-              ↑ 助手已记住本次对话中的偏好，推荐结果将越来越精准
-            </div>
-          )}
+          {history.length>5&&<div className="memory-hint">↑ 助手已记住本次对话中的偏好，推荐结果将越来越精准</div>}
         </div>
-
-        {/* 用户画像标签栏（有画像才显示） */}
         {renderProfileTags()}
-
-        {/* 输入区域 */}
         <div className="chat-input-row">
-          <input
-            className="chat-input"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && send()}
-            placeholder="输入你的 Kindle 问题……按 Enter 发送"
-            disabled={loading}
-          />
-          <button className="chat-send" onClick={() => send()} disabled={loading}>
-            发送
-          </button>
+          <input className="chat-input" value={input} onChange={e=>setInput(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&send()}
+            placeholder="输入你的 Kindle 问题……按 Enter 发送" disabled={loading}/>
+          <button className="chat-send" onClick={()=>send()} disabled={loading}>发送</button>
         </div>
       </div>
     </section>
@@ -477,7 +810,8 @@ function ChatSection() {
 
 export default function App() {
   const [filter, setFilter] = useState("all");
-
+const [quizPrompt, setQuizPrompt] = useState(null);
+  
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -550,7 +884,7 @@ export default function App() {
       <div id="compare">
         <div className="section" style={{paddingTop:0}}>
           <div className="sec-label">// 横向对比</div>
-          <h2 className="sec-title">2024 在售型号核心参数</h2>
+          <h2 className="sec-title">2026 在售型号核心参数</h2>
           <div className="compare-wrap">
             <table className="compare-table">
               <thead>
@@ -574,19 +908,22 @@ export default function App() {
         </div>
       </div>
 
-      {/* TUTORIALS */}
-      <div id="tutorials">
-        <div className="section">
-          <div className="sec-label">// 使用指南</div>
-          <h2 className="sec-title">深度教程（点击展开）</h2>
-          <div className="tut-list">
-            {TUTORIALS.map((t,i)=><TutorialItem key={i} t={t}/>)}
-          </div>
-        </div>
-      </div>
+   {/* TUTORIALS */}
+<div id="tutorials">
+  <div className="section">
+    <div className="sec-label">// 使用指南</div>
+    <h2 className="sec-title">深度教程（点击展开）</h2>
+    <div className="tut-list">
+      {TUTORIALS.map((t,i)=><TutorialItem key={i} t={t}/>)}
+    </div>
+  </div>
+</div>
 
-      {/* AI CHAT */}
-      <ChatSection/>
+{/* 选购问卷 ← 新增 */}
+<QuizSection onSendToChat={(prompt) => setQuizPrompt(prompt)} />
+
+{/* AI CHAT */}
+<ChatSection externalPrompt={quizPrompt} onExternalPromptUsed={() => setQuizPrompt(null)} />
 
       {/* FOOTER */}
       <footer className="footer">

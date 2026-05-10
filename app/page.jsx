@@ -82,7 +82,10 @@ const globalCSS = `
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 
-#models,
+#models {
+  scroll-margin-top: 35px;
+}
+
 #compare,
 #tutorials,
 #quiz-section,

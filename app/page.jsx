@@ -884,7 +884,7 @@ const [quizPrompt, setQuizPrompt] = useState(null);
       <div id="compare">
         <div className="section" style={{paddingTop:0}}>
           <div className="sec-label">// 横向对比</div>
-          <h2 className="sec-title">2024 在售型号核心参数</h2>
+          <h2 className="sec-title">2026 在售型号核心参数</h2>
           <div className="compare-wrap">
             <table className="compare-table">
               <thead>

@@ -99,7 +99,7 @@ html{scroll-behavior:smooth;}
 }
 
 #chat-section {
-  scroll-margin-top: 55px;
+  scroll-margin-top: 40px;
 }
 
 body{font-family:'Noto Serif SC',serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}

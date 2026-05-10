@@ -86,12 +86,22 @@ html{scroll-behavior:smooth;}
   scroll-margin-top: 35px;
 }
 
-#compare,
-#tutorials,
-#quiz-section,
-#chat-section {
+#compare {
   scroll-margin-top: 80px;
 }
+
+#tutorials {
+  scroll-margin-top: 70px;
+}
+
+#quiz-section {
+  scroll-margin-top: 70px;
+}
+
+#chat-section {
+  scroll-margin-top: 55px;
+}
+
 body{font-family:'Noto Serif SC',serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
 
 /* grain */

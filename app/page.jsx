@@ -81,6 +81,14 @@ const globalCSS = `
 :root{--ink:#1a1208;--paper:#f5f0e8;--warm:#e8ddc8;--amber:#c8860a;--amber-light:#e8a020;--muted:#8a7a60;--border:#d4c8a8;--white:#fdfaf4;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+
+#models,
+#compare,
+#tutorials,
+#quiz-section,
+#chat-section {
+  scroll-margin-top: 80px;
+}
 body{font-family:'Noto Serif SC',serif;background:var(--paper);color:var(--ink);overflow-x:hidden;}
 
 /* grain */

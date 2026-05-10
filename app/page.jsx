@@ -611,7 +611,7 @@ export function getVisitorId() {
   return id;
 }
 
-function ChatSection() {
+function ChatSection({ externalPrompt, onExternalPromptUsed }) {
   const [msgs, setMsgs] = useState([
     { role:"ai", html:"你好！我是 <strong>Kindle 助手</strong>，专门解答关于 Kindle 的一切问题 📖<br><br>型号选购、格式推送、字体安装、越狱教程、故障排查……都可以问我～<br><br><em style='color:var(--amber);font-size:.8rem;font-style:normal'>💡 我会记住你的偏好，越聊越懂你的需求。</em>" }
   ]);
@@ -629,6 +629,13 @@ function ChatSection() {
   setUidState(getVisitorId());
 }, []);
   useEffect(() => { if(boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight; }, [msgs, loading]);
+  // 接收问卷传来的 prompt，自动发送
+  useEffect(() => {
+    if (externalPrompt) {
+      send(externalPrompt);
+      onExternalPromptUsed?.();
+    }
+}, [externalPrompt]);
 
   function copyUID() {
     navigator.clipboard?.writeText(uid).then(() => { setCopied(true); setTimeout(()=>setCopied(false),2000); });
@@ -879,19 +886,22 @@ const [quizPrompt, setQuizPrompt] = useState(null);
         </div>
       </div>
 
-      {/* TUTORIALS */}
-      <div id="tutorials">
-        <div className="section">
-          <div className="sec-label">// 使用指南</div>
-          <h2 className="sec-title">深度教程（点击展开）</h2>
-          <div className="tut-list">
-            {TUTORIALS.map((t,i)=><TutorialItem key={i} t={t}/>)}
-          </div>
-        </div>
-      </div>
+   {/* TUTORIALS */}
+<div id="tutorials">
+  <div className="section">
+    <div className="sec-label">// 使用指南</div>
+    <h2 className="sec-title">深度教程（点击展开）</h2>
+    <div className="tut-list">
+      {TUTORIALS.map((t,i)=><TutorialItem key={i} t={t}/>)}
+    </div>
+  </div>
+</div>
 
-      {/* AI CHAT */}
-      <ChatSection/>
+{/* 选购问卷 ← 新增 */}
+<QuizSection onSendToChat={(prompt) => setQuizPrompt(prompt)} />
+
+{/* AI CHAT */}
+<ChatSection externalPrompt={quizPrompt} onExternalPromptUsed={() => setQuizPrompt(null)} />
 
       {/* FOOTER */}
       <footer className="footer">

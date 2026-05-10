@@ -210,6 +210,26 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .footer{padding:1.5rem 1.2rem;flex-direction:column;}
   .tut-body{padding-left:1.5rem;}
 }
+
+.uid-panel{background:#141008;border:1px solid #2a2010;border-radius:2px;padding:.9rem 1.2rem;margin-bottom:1rem;display:flex;flex-direction:column;gap:.7rem;}
+.uid-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:#4a3a20;margin-bottom:.2rem;}
+.uid-code{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--amber);letter-spacing:.18em;}
+.uid-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.28rem .7rem;border:1px solid #3a3020;background:transparent;color:#6a5a40;cursor:pointer;border-radius:2px;letter-spacing:.06em;transition:all .15s;}
+.uid-btn:hover{border-color:var(--amber);color:var(--amber);}
+.uid-tip{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:#4a3a20;line-height:1.7;}
+.uid-input-row{display:flex;gap:.5rem;}
+.uid-input{flex:1;font-family:'JetBrains Mono',monospace;font-size:.78rem;background:#1e1808;border:1px solid #3a3020;color:var(--paper);padding:.35rem .7rem;border-radius:2px;outline:none;letter-spacing:.1em;}
+.uid-input:focus{border-color:var(--amber);}
+.uid-input::placeholder{color:#3a2a10;letter-spacing:0;}
+.uid-confirm{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.35rem .85rem;background:var(--amber);color:var(--ink);border:none;cursor:pointer;border-radius:2px;font-weight:700;white-space:nowrap;}
+.profile-bar{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap;}
+.profile-tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;padding:.2rem .55rem;border:1px solid #3a3020;color:#8a7a50;border-radius:2px;}
+.profile-tag.active{border-color:var(--amber);color:var(--amber);}
+.source-badge{font-family:'JetBrains Mono',monospace;font-size:.56rem;padding:.1rem .4rem;border-radius:2px;display:inline-block;margin-top:.4rem;}
+.source-badge.local{background:rgba(45,122,58,.15);color:#2d7a3a;border:1px solid rgba(45,122,58,.3);}
+.source-badge.deepseek{background:rgba(200,134,10,.1);color:var(--amber);border:1px solid rgba(200,134,10,.25);}
+.memory-hint{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a3a20;padding:.5rem 0;text-align:center;opacity:.6;}
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -279,194 +299,177 @@ function TutorialItem({ t }) {
 */
 // ─────────────────────────────────────────────────────────────────────────────
 
+function generateShortUID() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 去掉易混淆的 0/O/1/I
+  const seg = (n) => Array.from({length:n}, () => chars[Math.floor(Math.random()*chars.length)]).join("");
+  return `${seg(4)}-${seg(4)}`;
+}
+
+function getOrCreateUID() {
+  if (typeof window === "undefined") return "";
+  let uid = localStorage.getItem("aok_uid");
+  if (!uid) { uid = generateShortUID(); localStorage.setItem("aok_uid", uid); }
+  return uid;
+}
+
 function ChatSection() {
   const [msgs, setMsgs] = useState([
-    { role: "ai", html: "你好！我是 <strong>Kindle 助手</strong>，专门解答关于 Kindle 的一切问题 📖<br><br>型号选购、格式推送、字体安装、越狱教程、故障排查……都可以问我～<br><br><em style='color:var(--amber);font-size:.8rem;font-style:normal'>💡 我会记住你的偏好，越聊越懂你的需求。</em>" }
+    { role:"ai", html:"你好！我是 <strong>Kindle 助手</strong>，专门解答关于 Kindle 的一切问题 📖<br><br>型号选购、格式推送、字体安装、越狱教程、故障排查……都可以问我～<br><br><em style='color:var(--amber);font-size:.8rem;font-style:normal'>💡 我会记住你的偏好，越聊越懂你的需求。</em>" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
-  // 用户画像状态（从 API 返回值实时更新）
   const [profile, setProfile] = useState(null);
+  const [uid, setUidState] = useState("");
+  const [showUidPanel, setShowUidPanel] = useState(false);
+  const [uidInputVal, setUidInputVal] = useState("");
+  const [copied, setCopied] = useState(false);
   const boxRef = useRef(null);
 
-  // ── visitorId：优先使用 crypto.randomUUID，降级用时间戳 ──
-  function getVisitorId() {
-    if (typeof window === "undefined") return "";
-    let id = localStorage.getItem("all_of_kindle_visitor_id");
-    if (!id) {
-      id = crypto.randomUUID?.() || `visitor_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-      localStorage.setItem("all_of_kindle_visitor_id", id);
-    }
-    return id;
+  useEffect(() => { setUidState(getOrCreateUID()); }, []);
+  useEffect(() => { if(boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight; }, [msgs, loading]);
+
+  function copyUID() {
+    navigator.clipboard?.writeText(uid).then(() => { setCopied(true); setTimeout(()=>setCopied(false),2000); });
   }
 
-  useEffect(() => {
-    if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight;
-  }, [msgs, loading]);
+  function applyManualUID() {
+    const clean = uidInputVal.replace(/[\s-]/g,"").toUpperCase();
+    if (clean.length !== 8) { alert("请输入 8 位字符，如 ABCD-1234"); return; }
+    const fmt = `${clean.slice(0,4)}-${clean.slice(4)}`;
+    localStorage.setItem("aok_uid", fmt);
+    setUidState(fmt); setUidInputVal(""); setShowUidPanel(false);
+    setProfile(null); setHistory([]);
+    setMsgs([{ role:"ai", html:`UID 已切换为 <code style="color:var(--amber);font-family:'JetBrains Mono',monospace">${fmt}</code><br>已加载该 ID 的历史偏好，继续聊吧 ✓` }]);
+  }
+
+  function resetUID() {
+    if (!confirm("确认重置？将生成全新 UID，当前记忆无法找回。")) return;
+    localStorage.removeItem("aok_uid");
+    const newId = getOrCreateUID();
+    setUidState(newId); setProfile(null); setHistory([]); setShowUidPanel(false);
+    setMsgs([{ role:"ai", html:"已重置身份 🔄<br>你好，我是 <strong>Kindle 助手</strong>，请问有什么想了解的？" }]);
+  }
 
   async function send(text) {
-    const q = (text || input).trim();
-    if (!q || loading) return;
+    const q = (text||input).trim();
+    if (!q||loading) return;
     setInput("");
-    setMsgs(m => [...m, { role: "user", html: fmtMsg(q) }]);
-    const nh = [...history, { role: "user", content: q }];
-    setHistory(nh);
-    setLoading(true);
-
+    setMsgs(m=>[...m,{role:"user",html:fmtMsg(q)}]);
+    const nh = [...history,{role:"user",content:q}];
+    setHistory(nh); setLoading(true);
     try {
-      const visitorId = getVisitorId();
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitorId, messages: nh }),
-      });
-
+      const res = await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({visitorId:uid,messages:nh})});
       const data = await res.json();
-      const reply = data.reply || "未收到有效回复";
-      const source = data.source || "deepseek"; // "local" | "deepseek"
-
-      // 更新画像状态
+      const reply = data.reply||"未收到有效回复";
       if (data.profile) setProfile(data.profile);
-
-      // 在消息气泡底部附加来源标签
-      const sourceBadge = source === "local"
+      const badge = data.source==="local"
         ? `<span class="source-badge local">📚 本地知识库</span>`
         : `<span class="source-badge deepseek">✦ DeepSeek AI</span>`;
-
-      setMsgs(m => [...m, { role: "ai", html: fmtMsg(reply) + "<br>" + sourceBadge }]);
-      setHistory(h => [...h, { role: "assistant", content: reply }]);
-    } catch (e) {
-      setMsgs(m => [...m, { role: "ai", html: `请求失败：${e.message}` }]);
+      setMsgs(m=>[...m,{role:"ai",html:fmtMsg(reply)+"<br>"+badge}]);
+      setHistory(h=>[...h,{role:"assistant",content:reply}]);
+    } catch(e) {
+      setMsgs(m=>[...m,{role:"ai",html:`请求失败：${e.message}`}]);
     }
-
     setLoading(false);
   }
 
-  // ── 画像标签渲染（显示在输入框上方）──────────────────────
   function renderProfileTags() {
-    if (!profile || profile.messageCount < 2) return null;
-
-    const tags = [];
-
-    if (profile.budget) {
-      const label = { low: "💰 入门预算", mid: "💳 中等预算", high: "💎 高端预算" };
-      tags.push(label[profile.budget]);
-    }
-
-    const useCaseMap = { manga: "🎨 看漫画", notes: "✏️ 做笔记", pdf: "📄 看PDF", reading: "📖 纯阅读", study: "🎓 学习备考" };
-    profile.useCase?.slice(0, 2).forEach(u => {
-      if (useCaseMap[u]) tags.push(useCaseMap[u]);
-    });
-
-    if (profile.needWaterproof) tags.push("💧 防水");
-    if (profile.needColor) tags.push("🌈 彩色屏");
-    if (profile.needStylus) tags.push("🖊️ 手写笔");
-
-    if (tags.length === 0) return null;
-
+    if (!profile||profile.messageCount<2) return null;
+    const tags=[];
+    if(profile.budget){const l={low:"💰 入门预算",mid:"💳 中等预算",high:"💎 高端预算"};tags.push(l[profile.budget]);}
+    const ucm={manga:"🎨 看漫画",notes:"✏️ 做笔记",pdf:"📄 看PDF",reading:"📖 纯阅读",study:"🎓 学习"};
+    profile.useCase?.slice(0,2).forEach(u=>{if(ucm[u])tags.push(ucm[u]);});
+    if(profile.needWaterproof)tags.push("💧 防水");
+    if(profile.needColor)tags.push("🌈 彩色屏");
+    if(profile.needStylus)tags.push("🖊️ 手写笔");
+    if(!tags.length) return null;
     return (
       <div className="profile-bar">
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: ".56rem", color: "#4a3a20", letterSpacing: ".08em" }}>
-          我的偏好：
-        </span>
-        {tags.map((t, i) => (
-          <span key={i} className="profile-tag active">{t}</span>
-        ))}
-        {/* 清除画像按钮 */}
-        <button
-          onClick={clearProfile}
-          title="清除记忆，重新开始"
-          style={{
-            marginLeft: "auto", fontFamily: "'JetBrains Mono',monospace", fontSize: ".55rem",
-            background: "transparent", border: "1px solid #2a2010", color: "#4a3a20",
-            padding: ".15rem .45rem", cursor: "pointer", borderRadius: "2px",
-          }}
-        >
-          ✕ 清除记忆
-        </button>
+        <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:".56rem",color:"#4a3a20"}}>我的偏好：</span>
+        {tags.map((t,i)=><span key={i} className="profile-tag active">{t}</span>)}
       </div>
     );
   }
 
-  // ── 清除用户画像（仅删除本地 ID，服务端记录自然失效）──────
-  function clearProfile() {
-    if (!confirm("确认清除对话记忆？下次对话将重新开始。")) return;
-    localStorage.removeItem("all_of_kindle_visitor_id");
-    setProfile(null);
-    setHistory([]);
-    setMsgs([{
-      role: "ai",
-      html: "记忆已清除 🗑️<br>你好，我是 <strong>Kindle 助手</strong>，请问有什么想了解的？"
-    }]);
+  function renderUidPanel() {
+    if (!showUidPanel) return null;
+    return (
+      <div className="uid-panel">
+        <div style={{display:"flex",alignItems:"center",gap:"1rem"}}>
+          <div><div className="uid-label">你的记忆 ID</div><div className="uid-code">{uid}</div></div>
+          <div style={{display:"flex",gap:".5rem",marginLeft:"auto"}}>
+            <button className="uid-btn" onClick={copyUID}>{copied?"✓ 已复制":"复制"}</button>
+            <button className="uid-btn" onClick={resetUID} style={{color:"#7a3a30",borderColor:"#3a2020"}}>重置</button>
+          </div>
+        </div>
+        <div className="uid-tip">📋 记住这串 ID，在其他设备上输入后可延续对话记忆。<br/>清除浏览器数据前请先复制，否则记忆将无法恢复。</div>
+        <div>
+          <div className="uid-label" style={{marginBottom:".4rem"}}>切换到其他 ID</div>
+          <div className="uid-input-row">
+            <input className="uid-input" value={uidInputVal} onChange={e=>setUidInputVal(e.target.value)}
+              placeholder="输入其他设备的 ID，如 ABCD-1234"
+              onKeyDown={e=>e.key==="Enter"&&applyManualUID()} />
+            <button className="uid-confirm" onClick={applyManualUID}>切换 →</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <section className="chat-section" id="chat-section">
       <div className="chat-wrapper">
-        <div className="chat-sec-label">// AI 智能问答</div>
-        <div className="chat-sec-title">问问 Kindle 助手</div>
-        <div className="chat-sec-sub">
-          由 DeepSeek AI 驱动，支持型号选购、使用教程、越狱指南、故障排查等所有 Kindle 相关问题。
-          {profile && profile.messageCount > 1 && (
-            <span style={{ color: "var(--amber)", fontSize: ".8rem", marginLeft: ".5rem" }}>
-              （已记住你的 {profile.messageCount} 条对话偏好）
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
+          <div>
+            <div className="chat-sec-label">// AI 智能问答</div>
+            <div className="chat-sec-title">问问 Kindle 助手</div>
+          </div>
+          <button onClick={()=>setShowUidPanel(v=>!v)} title="管理你的记忆 ID"
+            style={{marginTop:".3rem",fontFamily:"'JetBrains Mono',monospace",fontSize:".6rem",letterSpacing:".08em",
+              padding:".32rem .75rem",background:"transparent",cursor:"pointer",borderRadius:"2px",transition:"all .15s",flexShrink:0,
+              border:`1px solid ${showUidPanel?"var(--amber)":"#2a2010"}`,
+              color:showUidPanel?"var(--amber)":"#5a4a30"}}>
+            UID · {uid||"…"}
+          </button>
+        </div>
+        <div className="chat-sec-sub" style={{marginTop:".5rem"}}>
+          由 DeepSeek AI 驱动，支持型号选购、使用教程、越狱指南、故障排查等问题。
+          {profile&&profile.messageCount>1&&(
+            <span style={{color:"var(--amber)",fontSize:".8rem",marginLeft:".5rem"}}>
+              （已记住 {profile.messageCount} 条对话偏好）
             </span>
           )}
         </div>
-
-        {/* 快捷问题 */}
+        {renderUidPanel()}
         <div className="quick-row">
-          {QUICK_Q.map(q => (
-            <button key={q} className="quick-btn" onClick={() => send(q)}>
-              {q.length > 16 ? q.slice(0, 16) + "…" : q}
+          {QUICK_Q.map(q=>(
+            <button key={q} className="quick-btn" onClick={()=>send(q)}>
+              {q.length>16?q.slice(0,16)+"…":q}
             </button>
           ))}
         </div>
-
-        {/* 消息区域 */}
         <div className="chat-box" ref={boxRef}>
-          {msgs.map((m, i) => (
+          {msgs.map((m,i)=>(
             <div key={i} className={`msg ${m.role}`}>
-              <div className="msg-av">{m.role === "ai" ? "K" : "U"}</div>
-              <div className="msg-bubble" dangerouslySetInnerHTML={{ __html: m.html }} />
+              <div className="msg-av">{m.role==="ai"?"K":"U"}</div>
+              <div className="msg-bubble" dangerouslySetInnerHTML={{__html:m.html}}/>
             </div>
           ))}
-          {loading && (
+          {loading&&(
             <div className="msg ai">
               <div className="msg-av">K</div>
-              <div className="msg-bubble">
-                <div className="dots">
-                  <div className="dot" /><div className="dot" /><div className="dot" />
-                </div>
-              </div>
+              <div className="msg-bubble"><div className="dots"><div className="dot"/><div className="dot"/><div className="dot"/></div></div>
             </div>
           )}
-          {/* 历史消息超过3条时，显示记忆提示 */}
-          {history.length > 5 && (
-            <div className="memory-hint">
-              ↑ 助手已记住本次对话中的偏好，推荐结果将越来越精准
-            </div>
-          )}
+          {history.length>5&&<div className="memory-hint">↑ 助手已记住本次对话中的偏好，推荐结果将越来越精准</div>}
         </div>
-
-        {/* 用户画像标签栏（有画像才显示） */}
         {renderProfileTags()}
-
-        {/* 输入区域 */}
         <div className="chat-input-row">
-          <input
-            className="chat-input"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && send()}
-            placeholder="输入你的 Kindle 问题……按 Enter 发送"
-            disabled={loading}
-          />
-          <button className="chat-send" onClick={() => send()} disabled={loading}>
-            发送
-          </button>
+          <input className="chat-input" value={input} onChange={e=>setInput(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&send()}
+            placeholder="输入你的 Kindle 问题……按 Enter 发送" disabled={loading}/>
+          <button className="chat-send" onClick={()=>send()} disabled={loading}>发送</button>
         </div>
       </div>
     </section>

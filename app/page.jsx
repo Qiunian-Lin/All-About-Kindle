@@ -164,6 +164,258 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .tut-body .tip{background:rgba(200,134,10,.08);border-left:3px solid var(--amber);padding:.7rem 1rem;margin:.8rem 0;font-size:.82rem;}
 .tut-body strong{color:var(--ink);font-weight:600;}
 
+// ─── QUIZ SECTION ────────────────────────────────────────────────────────────
+
+const QUIZ_STEPS = [
+  {
+    id: "budget",
+    question: "你的预算范围大概是？",
+    options: [
+      { label: "600 元以内", value: "low", icon: "💰" },
+      { label: "600–1100 元", value: "mid", icon: "💳" },
+      { label: "1100–1600 元", value: "high", icon: "💎" },
+      { label: "1600 元以上", value: "top", icon: "🏆" },
+    ],
+  },
+  {
+    id: "usecase",
+    question: "你主要想用 Kindle 做什么？",
+    options: [
+      { label: "看小说 / 纯文字阅读", value: "reading", icon: "📖" },
+      { label: "看漫画 / 图文杂志", value: "manga", icon: "🎨" },
+      { label: "做手写笔记 / 批注", value: "notes", icon: "✏️" },
+      { label: "阅读 PDF / 学术文献", value: "pdf", icon: "📄" },
+    ],
+  },
+  {
+    id: "feature",
+    question: "有什么特别在意的功能？",
+    options: [
+      { label: "防水（浴室 / 游泳池边用）", value: "waterproof", icon: "💧" },
+      { label: "彩色屏幕", value: "color", icon: "🌈" },
+      { label: "无线充电", value: "wireless", icon: "⚡" },
+      { label: "没有特别要求", value: "none", icon: "✓" },
+    ],
+  },
+];
+
+// 根据三个维度输出推荐结果
+function calcResult(budget, usecase, feature) {
+  // Scribe 系列（笔记需求）
+  if (usecase === "notes") {
+    return {
+      model: "Kindle Scribe（第 2 代）",
+      price: "¥2,399 起",
+      reason:
+        "手写笔记是你的核心需求，Scribe 是 Kindle 全系唯一支持手写笔的型号。10.2 英寸大屏 + Premium Pen，可直接在电子书里批注，学术/工作场景首选。",
+      tags: ["10.2\" 大屏", "手写笔随附", "300 ppi", "约 12 周续航"],
+      chatPrompt: "我需要用 Kindle Scribe 做笔记，它的手写功能具体怎么样？有哪些使用技巧？",
+    };
+  }
+
+  // 彩色需求 → Colorsoft
+  if (usecase === "manga" || feature === "color") {
+    return {
+      model: "Kindle Colorsoft",
+      price: "¥1,499",
+      reason:
+        "彩色 E Ink 屏幕让漫画、杂志图文栩栩如生，同时保留了电子墨水屏的护眼特性。如果你喜欢看图文内容或漫画，Colorsoft 是当前唯一的彩色 Kindle 选择。",
+      tags: ["彩色 E Ink", "7\" 屏", "IPX8 防水", "32 GB"],
+      chatPrompt: "Kindle Colorsoft 看漫画体验怎么样？色彩还原度如何？",
+    };
+  }
+
+  // 超高预算 + PDF → Scribe
+  if (budget === "top" && usecase === "pdf") {
+    return {
+      model: "Kindle Scribe（第 2 代）",
+      price: "¥2,399 起",
+      reason:
+        "10.2 英寸大屏是阅读 PDF 学术文献最舒适的 Kindle 选择，无需缩放即可阅读 A4 版面。配合手写笔可直接在文献上批注，适合研究人员和重度学术用户。",
+      tags: ["10.2\" 大屏", "PDF 批注", "手写笔", "16/32/64 GB"],
+      chatPrompt: "Kindle Scribe 阅读 PDF 的体验怎么样？和普通 Kindle 差距有多大？",
+    };
+  }
+
+  // 低预算
+  if (budget === "low") {
+    return {
+      model: "Kindle 基础款（第 16 代）",
+      price: "¥558",
+      reason:
+        "预算 600 元内的最优解。6 英寸 300 ppi 高清屏，轻巧便携只有 158g，满足日常小说阅读完全够用。是体验电子墨水屏阅读性价比最高的入口。",
+      tags: ["6\" 轻便", "300 ppi", "158g", "约 6 周续航"],
+      chatPrompt: "Kindle 基础款和 Paperwhite 差距大吗？入门首选哪个？",
+    };
+  }
+
+  // 中等预算 + 防水 or 无线充 → Paperwhite SE
+  if ((budget === "high" || budget === "top") && (feature === "wireless" || feature === "waterproof")) {
+    return {
+      model: "Kindle Paperwhite Signature Edition",
+      price: "¥1,058",
+      reason:
+        "Paperwhite 系列旗舰版，在标准版基础上增加 Qi 无线充电、自动感光调节前灯和 32 GB 存储。防水 IPX8，可以在浴室或泳池边放心使用。",
+      tags: ["无线充电", "自动感光", "IPX8 防水", "32 GB"],
+      chatPrompt: "Paperwhite SE 和标准版 Paperwhite 具体有哪些区别，值得多花钱吗？",
+    };
+  }
+
+  // 中等预算（默认） → Paperwhite 标准版
+  if (budget === "mid" || budget === "high") {
+    return {
+      model: "Kindle Paperwhite（第 12 代）",
+      price: "¥858",
+      reason:
+        "综合性价比最高的选择，也是销量最好的 Kindle。7 英寸 300 ppi 大屏 + IPX8 防水 + 12 周超长续航，满足绝大多数阅读需求。",
+      tags: ["7\" 大屏", "IPX8 防水", "300 ppi", "约 12 周续航"],
+      chatPrompt: "Kindle Paperwhite 12代有哪些值得关注的新特性？和上一代比有什么改进？",
+    };
+  }
+
+  // 兜底
+  return {
+    model: "Kindle Paperwhite（第 12 代）",
+    price: "¥858",
+    reason:
+      "综合评估下来，Paperwhite 是最均衡的选择——7 英寸大屏、防水、长续航，几乎适合所有类型的读者。",
+    tags: ["7\" 大屏", "IPX8 防水", "300 ppi", "约 12 周续航"],
+    chatPrompt: "Kindle Paperwhite 12代的整体体验怎么样？适合我这样的用户吗？",
+  };
+}
+
+function QuizSection({ onSendToChat }) {
+  const [step, setStep] = useState(0);           // 0-2 问题，3 结果
+  const [answers, setAnswers] = useState({});    // { budget, usecase, feature }
+  const [current, setCurrent] = useState(null);  // 当前步骤的选中项
+
+  const stepKeys = ["budget", "usecase", "feature"];
+  const result = step === 3
+    ? calcResult(answers.budget, answers.usecase, answers.feature)
+    : null;
+
+  function handleNext() {
+    if (current === null) return;
+    const key = stepKeys[step];
+    const newAnswers = { ...answers, [key]: current };
+    setAnswers(newAnswers);
+    setCurrent(null);
+    setStep(s => s + 1);
+  }
+
+  function handleBack() {
+    if (step === 0) return;
+    setCurrent(answers[stepKeys[step - 1]] || null);
+    setStep(s => s - 1);
+  }
+
+  function reset() {
+    setStep(0);
+    setAnswers({});
+    setCurrent(null);
+  }
+
+  function sendToChat(prompt) {
+    // 滚动到 AI 问答区并触发预填问题
+    document.getElementById("chat-section")?.scrollIntoView({ behavior: "smooth" });
+    onSendToChat?.(prompt);
+  }
+
+  return (
+    <div className="quiz-section" id="quiz-section">
+      <div className="quiz-wrapper">
+        <div className="quiz-sec-label">// 选购向导</div>
+        <div className="quiz-sec-title">3 步找到适合你的 Kindle</div>
+        <div className="quiz-sec-sub">
+          回答几个简单问题，我们帮你从全系列中精准匹配——不用自己看参数表。
+        </div>
+
+        {/* 步骤指示器 */}
+        {step < 3 && (
+          <div className="quiz-steps">
+            {QUIZ_STEPS.map((_, i) => (
+              <div
+                key={i}
+                className={`quiz-step-dot ${i < step ? "done" : ""} ${i === step ? "active" : ""}`}
+              />
+            ))}
+            <span className="quiz-step-label">步骤 {step + 1} / {QUIZ_STEPS.length}</span>
+          </div>
+        )}
+
+        {/* 问题区域 */}
+        {step < 3 && (
+          <>
+            <div className="quiz-q">{QUIZ_STEPS[step].question}</div>
+            <div className="quiz-options">
+              {QUIZ_STEPS[step].options.map(opt => (
+                <button
+                  key={opt.value}
+                  className={`quiz-opt${current === opt.value ? " selected" : ""}`}
+                  onClick={() => setCurrent(opt.value)}
+                >
+                  {opt.icon} {opt.label}
+                </button>
+              ))}
+            </div>
+            <div className="quiz-nav">
+              {step > 0 && (
+                <button className="quiz-btn-back" onClick={handleBack}>← 上一步</button>
+              )}
+              <button
+                className="quiz-btn-next"
+                onClick={handleNext}
+                disabled={current === null}
+              >
+                {step === QUIZ_STEPS.length - 1 ? "查看推荐结果 →" : "下一步 →"}
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* 结果区域 */}
+        {step === 3 && result && (
+          <div className="quiz-result">
+            <div className="quiz-result-label">✦ 为你推荐</div>
+            <div className="quiz-result-model">{result.model}</div>
+            <div style={{
+              fontFamily: "'JetBrains Mono',monospace",
+              fontSize: ".9rem",
+              color: "var(--amber)",
+              marginBottom: ".8rem"
+            }}>
+              {result.price}
+            </div>
+            <div className="quiz-result-reason">{result.reason}</div>
+            <div className="quiz-result-tags">
+              {result.tags.map(t => (
+                <span key={t} className="quiz-result-tag">{t}</span>
+              ))}
+            </div>
+            <div className="quiz-cta-row">
+              <button
+                className="quiz-cta-primary"
+                onClick={() => sendToChat(result.chatPrompt)}
+              >
+                继续问 AI 助手 →
+              </button>
+              <button
+                className="quiz-cta-secondary"
+                onClick={() => {
+                  document.getElementById("models")?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                查看完整型号库
+              </button>
+            </div>
+            <button className="quiz-reset" onClick={reset}>重新作答</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* chat section */
 .chat-section{background:var(--ink);padding:4.5rem 0;}
 .chat-wrapper{max-width:780px;margin:0 auto;padding:0 2rem;}
@@ -229,6 +481,43 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .source-badge.local{background:rgba(45,122,58,.15);color:#2d7a3a;border:1px solid rgba(45,122,58,.3);}
 .source-badge.deepseek{background:rgba(200,134,10,.1);color:var(--amber);border:1px solid rgba(200,134,10,.25);}
 .memory-hint{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#4a3a20;padding:.5rem 0;text-align:center;opacity:.6;}
+
+
+/* ── 选购问卷 ── */
+.quiz-section{background:var(--warm);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:3.5rem 0;}
+.quiz-wrapper{max-width:700px;margin:0 auto;padding:0 2rem;}
+.quiz-sec-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--amber);margin-bottom:.6rem;}
+.quiz-sec-title{font-family:'Playfair Display',serif;font-size:1.75rem;margin-bottom:.4rem;}
+.quiz-sec-sub{font-size:.86rem;color:var(--muted);line-height:1.75;margin-bottom:2rem;}
+.quiz-steps{display:flex;gap:.5rem;margin-bottom:2rem;align-items:center;}
+.quiz-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s;}
+.quiz-step-dot.done{background:var(--amber);}
+.quiz-step-dot.active{background:var(--amber);box-shadow:0 0 0 3px rgba(200,134,10,.2);}
+.quiz-step-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:var(--muted);margin-left:.5rem;}
+.quiz-q{font-size:1rem;font-weight:600;margin-bottom:1.2rem;color:var(--ink);}
+.quiz-options{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.8rem;}
+.quiz-opt{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.05em;padding:.65rem 1.1rem;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;border-radius:2px;transition:all .18s;line-height:1.4;}
+.quiz-opt:hover{border-color:var(--amber);color:var(--ink);}
+.quiz-opt.selected{background:var(--amber);color:var(--ink);border-color:var(--amber);font-weight:600;}
+.quiz-nav{display:flex;align-items:center;gap:1rem;}
+.quiz-btn-next{background:var(--ink);color:var(--paper);border:none;padding:.75rem 1.8rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s;}
+.quiz-btn-next:hover{background:#2a2010;}
+.quiz-btn-next:disabled{opacity:.3;cursor:not-allowed;}
+.quiz-btn-back{background:transparent;color:var(--muted);border:1px solid var(--border);padding:.75rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:pointer;border-radius:2px;}
+.quiz-btn-back:hover{border-color:var(--muted);}
+.quiz-result{background:var(--white);border:1px solid var(--border);border-radius:2px;padding:1.8rem;animation:msgIn .35s ease;}
+.quiz-result-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem;}
+.quiz-result-model{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.4rem;}
+.quiz-result-reason{font-size:.86rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem;}
+.quiz-result-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem;}
+.quiz-result-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:2px;color:var(--muted);}
+.quiz-cta-row{display:flex;gap:.8rem;flex-wrap:wrap;}
+.quiz-cta-primary{background:var(--amber);color:var(--ink);border:none;padding:.75rem 1.6rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:700;transition:background .2s;}
+.quiz-cta-primary:hover{background:var(--amber-light);}
+.quiz-cta-secondary{background:transparent;color:var(--muted);border:1px solid var(--border);padding:.75rem 1.2rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:pointer;border-radius:2px;}
+.quiz-cta-secondary:hover{border-color:var(--amber);color:var(--amber);}
+.quiz-reset{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);background:transparent;border:none;cursor:pointer;margin-top:1rem;text-decoration:underline;text-underline-offset:3px;}
+.quiz-reset:hover{color:var(--ink);}
 
 `;
 
@@ -492,7 +781,8 @@ function ChatSection() {
 
 export default function App() {
   const [filter, setFilter] = useState("all");
-
+const [quizPrompt, setQuizPrompt] = useState(null);
+  
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
